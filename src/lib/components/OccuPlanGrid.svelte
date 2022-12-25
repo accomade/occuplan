@@ -61,6 +61,12 @@
     return res
   }
 
+  const hiddenWeekNum = ( m:DateTime, w:DateTime):boolean => {
+    let lastDayOfMonth = m.endOf('month')
+    let firstDayOfWeek = w.startOf('week');
+    return lastDayOfMonth < firstDayOfWeek
+  }
+
 </script>
 
 
@@ -76,20 +82,32 @@
             grid-template-rows: {monthGridTemplateRows(m)};
           " 
         class="days">
-          <div style="grid-area: columnLegend / d1 / columnLegend / d1;">Mo</div>
-          <div style="grid-area: columnLegend / d2 / columnLegend / d2;">Di</div>
-          <div style="grid-area: columnLegend / d3 / columnLegend / d3;">Mi</div>
-          <div style="grid-area: columnLegend / d4 / columnLegend / d4;">Do</div>
-          <div style="grid-area: columnLegend / d5 / columnLegend / d5;">Fr</div>
-          <div style="grid-area: columnLegend / d6 / columnLegend / d6;">Sa</div>
-          <div style="grid-area: columnLegend / d7 / columnLegend / d7;">So</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d1 / columnLegend / d1;">Mo</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d2 / columnLegend / d2;">Di</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d3 / columnLegend / d3;">Mi</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d4 / columnLegend / d4;">Do</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d5 / columnLegend / d5;">Fr</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d6 / columnLegend / d6;">Sa</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d7 / columnLegend / d7;">So</div>
           
           {#each days(m) as d ( `${d.year}-${d.month}-${d.day}` )}
-          <div style="grid-area: w{d.weekNumber} / d{d.weekday} / w{d.weekNumber} / d{d.weekday};">{d.day}</div>
+          <div 
+              class:weekend={ [6,7].includes(d.weekday) }
+              class="day"
+              style="grid-area: w{d.weekNumber} / d{d.weekday} / w{d.weekNumber} / d{d.weekday};"
+            >
+            {d.day}
+          </div>
           {/each}
 
           {#each weeks(m) as w ( `${w.year}-${w.month}-${w.weekNumber}` )}
-          <div style="grid-area: w{w.weekNumber} / rowLegend / w{w.weekNumber} / rowLegend;">{w.weekNumber}</div>
+          <div
+              class:hidden={ hiddenWeekNum(m, w)}
+              class="week-number"
+              style="grid-area: w{w.weekNumber} / rowLegend / w{w.weekNumber} / rowLegend;"
+            >
+            {w.weekNumber}
+          </div>
           {/each}
       </div>
     </div>
@@ -99,6 +117,31 @@
 </section>
 
 <style>
+  .hidden {
+    display: none;
+  }
+
+  .week-number {
+    text-align: left;
+    font-style: italic;
+    font-weight: lighter;
+    color: grey;
+  }
+
+  .weekday-header {
+    text-align: center;
+    background-color: darkslategray;
+    color: aliceblue;
+  }
+
+  .day {
+    text-align: center;
+  }
+
+  .weekend {
+    font-weight: bold;
+  }
+
   .occuplan-wrapper {
     border: 1px solid black;
     height: 100%;
