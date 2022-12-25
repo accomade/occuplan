@@ -1,6 +1,8 @@
+import type { DateTime } from "luxon";
+
 interface Occupation {
-  arrival: string;
-  leave: string;
+  arrival: DateTime;
+  leave: DateTime;
   type: string|undefined;
 }
 

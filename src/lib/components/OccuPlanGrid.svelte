@@ -67,6 +67,24 @@
     return lastDayOfMonth < firstDayOfWeek
   }
 
+  const occupied = ( d:DateTime ):boolean => {
+    const startOfDay = d.startOf('day');
+    const endOfDay = d.endOf('day')
+    return !! occupations.find( (o) => o.arrival < startOfDay && o.leave > endOfDay)
+  }
+
+  const occupationStarts = ( d:DateTime ):boolean => {
+    const startOfDay = d.startOf('day');
+    const endOfDay = d.endOf('day')
+    return !! occupations.find( (o) => o.arrival > startOfDay && o.arrival < endOfDay)
+  }
+
+  const occupationEnds = ( d:DateTime ):boolean => {
+    const startOfDay = d.startOf('day');
+    const endOfDay = d.endOf('day')
+    return !! occupations.find( (o) => o.leave > startOfDay && o.leave < endOfDay)
+  }
+
 </script>
 
 
@@ -92,6 +110,9 @@
           
           {#each days(m) as d ( `${d.year}-${d.month}-${d.day}` )}
           <div 
+              class:occupied={ occupied(d) }
+              class:occupationStarts={ occupationStarts(d) }
+              class:occupationEnds={ occupationEnds(d) }
               class:weekend={ [6,7].includes(d.weekday) }
               class="day"
               style="grid-area: w{d.weekNumber} / d{d.weekday} / w{d.weekNumber} / d{d.weekday};"
@@ -117,6 +138,17 @@
 </section>
 
 <style>
+  .occupationStarts {
+    background: linear-gradient(90deg, transparent, black);
+  }
+  .occupationEnds {
+    background: linear-gradient(90deg, black, transparent);
+  }
+  .occupied {
+    background-color: black;
+    color: darkolivegreen;
+  }
+
   .hidden {
     display: none;
   }
