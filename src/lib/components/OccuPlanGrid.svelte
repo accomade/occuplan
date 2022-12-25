@@ -13,14 +13,35 @@
   let months:DateTime[] = [];
   $: {
     let c = 0;
-
     for (let i = firstMonth; i <= numberOfMonth; i++) {
       months[c] = DateTime.utc(year, i, 1)
       c++;
     }
   }
 
-  const days = ( m:DateTime ) => {
+  let monthGridTemplateColumns = `[rowLegend] 1fr [d1] 1fr [d2] 1fr [d3] 1fr [d4] 1fr [d5] 1fr [d6] 1fr [d7] 1fr` 
+  
+  let monthGridTemplateRows = (m:DateTime):string => {
+    let res = `[columnLegend] 1fr [w${m.weekNumber}] 1fr` 
+    let n = m.plus({weeks: 1})
+    for(let w = 1; w <= 5; w++) {
+      res += ` [w${n.weekNumber}] 1fr`
+      n = n.plus({weeks: 1})
+    }
+    return res
+  }
+
+  const weeks = (m:DateTime):DateTime[] => {
+    let n = m.plus({weeks: 1});
+    let res:DateTime[] = [m, n];
+    for(let i = 1; i <= 4; i++) {
+      n = n.plus({weeks: 1})
+      res.push(n)
+    }
+    return res
+  }
+
+  const days = ( m:DateTime ):DateTime[] => {
 
     //find first
     let firstDay = m.startOf("week")
@@ -33,7 +54,6 @@
     let res:DateTime[] = [firstDay]
     
     while (n <= lastDay) {
-      console.log(n)
       res.push(n)
       n = n.plus({days: 1})
     }
@@ -50,18 +70,27 @@
     {#each months as m ( `${m.year}-${m.month}` )}
     <div class="month">
       <header class="month-header">{m.month} / {m.year}</header>
-      <div class="days">
-        <div>Mo</div>
-        <div>Di</div>
-        <div>Mi</div>
-        <div>Do</div>
-        <div>Fr</div>
-        <div>Sa</div>
-        <div>So</div>
-        
-        {#each days(m) as d ( `${d.year}-${d.month}-${d.day}` )}
-        <div>{d.day}</div>
-        {/each}
+      <div
+        style="
+            grid-template-columns: {monthGridTemplateColumns};
+            grid-template-rows: {monthGridTemplateRows(m)};
+          " 
+        class="days">
+          <div style="grid-area: columnLegend / d1 / columnLegend / d1;">Mo</div>
+          <div style="grid-area: columnLegend / d2 / columnLegend / d2;">Di</div>
+          <div style="grid-area: columnLegend / d3 / columnLegend / d3;">Mi</div>
+          <div style="grid-area: columnLegend / d4 / columnLegend / d4;">Do</div>
+          <div style="grid-area: columnLegend / d5 / columnLegend / d5;">Fr</div>
+          <div style="grid-area: columnLegend / d6 / columnLegend / d6;">Sa</div>
+          <div style="grid-area: columnLegend / d7 / columnLegend / d7;">So</div>
+          
+          {#each days(m) as d ( `${d.year}-${d.month}-${d.day}` )}
+          <div style="grid-area: w{d.weekNumber} / d{d.weekday} / w{d.weekNumber} / d{d.weekday};">{d.day}</div>
+          {/each}
+
+          {#each weeks(m) as w ( `${w.year}-${w.month}-${w.weekNumber}` )}
+          <div style="grid-area: w{w.weekNumber} / rowLegend / w{w.weekNumber} / rowLegend;">{w.weekNumber}</div>
+          {/each}
       </div>
     </div>
     {/each}
@@ -95,11 +124,7 @@
   }
 
   .days {
-    
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-    
   }
 
 </style>
