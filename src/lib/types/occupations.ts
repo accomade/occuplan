@@ -3,7 +3,13 @@ import type { DateTime } from "luxon";
 interface Occupation {
   arrival: DateTime;
   leave: DateTime;
-  type: string|undefined;
+  type: OccupationType|undefined;
 }
 
-export type { Occupation }
+interface OccupationType {
+  name: string;
+  backgroundColor: string;
+  fontColor: string;
+}
+
+export type { Occupation, OccupationType }

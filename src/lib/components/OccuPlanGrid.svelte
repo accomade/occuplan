@@ -1,9 +1,77 @@
 <script lang="ts">
-  import { DateTime } from 'luxon';
-  import type { Occupation } from '$lib/types/occupations.js';
+  import { DateTime, type DayNumbers, type WeekdayNumbers } from 'luxon';
+  import type { Occupation, OccupationType } from '$lib/types/occupations.js';
+  import type { WeekdayLabels, MonthLabels, I18n } from '$lib/types/i18n.js';
   
-  export let year = DateTime.now().get("year")
-  export let firstMonth = 1;
+
+  /** I18n ... monnth and weekday labels */
+  export const defaultWeekdayLabels:WeekdayLabels = {
+    1: 'Mo',
+    2: 'Tu',
+    3: 'We',
+    4: 'Th',
+    5: 'Fr',
+    6: 'Sa',
+    7: 'Su'
+  }
+  export const defaultMonthLabels:MonthLabels = {
+    1: 'Jan',
+    2: 'Feb',
+    3: 'Mar',
+    4: 'Apr',
+    5: 'May',
+    6: 'Jun',
+    7: 'Jul',
+    8: 'Aug',
+    9: 'Sep',
+    10: 'Oct',
+    11: 'Nov',
+    12: 'Dec',
+  }
+  export const defaultMonthHeaderFormatFun = ( monthLabel:string, year:string ) => `${monthLabel} / ${year}`
+
+  export let i18n:I18n = {
+    weekdayLabels: defaultWeekdayLabels,
+    monthLabels: defaultMonthLabels,
+    monthHeaderFormatFun: defaultMonthHeaderFormatFun,
+  }
+
+  const monthHeader = ( m:DateTime ) => {
+    let monthLabel = defaultMonthLabels[m.month];
+    if (i18n?.monthLabels) {
+      const custMonthLabel = i18n.monthLabels[m.month];
+      if(!!custMonthLabel) monthLabel = custMonthLabel;
+    }
+  
+    let formatFun = defaultMonthHeaderFormatFun;
+    if (i18n.monthHeaderFormatFun) {
+      formatFun = i18n.monthHeaderFormatFun
+    }
+
+    return formatFun(monthLabel, `${year}`)
+  }
+
+  const weekdayHeader = ( dayNum:WeekdayNumbers ):string => {
+    let weekdayLabel = defaultWeekdayLabels[dayNum];
+    if (i18n?.weekdayLabels) {
+      weekdayLabel = i18n.weekdayLabels[dayNum];
+    }
+    return weekdayLabel;
+  } 
+  /** I18n ... end */
+
+  /** Occupation Types configuration */
+  export let defaultOccupationType: OccupationType = {
+    name: 'default',
+    backgroundColor: 'black',
+    fontColor: 'white',
+  }
+
+  /** Occupation Types ... end */
+
+
+  export let year = DateTime.now().year
+  export let firstMonth = DateTime.now().month
 
   // 1 => Monday; always Monday. Don't overcomplicate things
   //export let firstDayOfWeek = 1;
@@ -12,10 +80,13 @@
   
   let months:DateTime[] = [];
   $: {
-    let c = 0;
-    for (let i = firstMonth; i <= numberOfMonth; i++) {
-      months[c] = DateTime.utc(year, i, 1)
-      c++;
+    let fMonth = DateTime.utc(year, firstMonth, 1)
+    months.push(fMonth);
+    
+    let nMonth = fMonth.plus({months: 1})
+    for (let c = 1; c < numberOfMonth; c++) {
+      months.push(nMonth);
+      nMonth = nMonth.plus({months: 1})
     }
   }
 
@@ -67,22 +138,58 @@
     return lastDayOfMonth < firstDayOfWeek
   }
 
-  const occupied = ( d:DateTime ):boolean => {
+  const occupied = ( d:DateTime ):Occupation|undefined => {
     const startOfDay = d.startOf('day');
     const endOfDay = d.endOf('day')
-    return !! occupations.find( (o) => o.arrival < startOfDay && o.leave > endOfDay)
+    return occupations.find( (o) => o.arrival < startOfDay && o.leave > endOfDay)
   }
 
-  const occupationStarts = ( d:DateTime ):boolean => {
+  const occupationStarts = ( d:DateTime ):Occupation|undefined => {
     const startOfDay = d.startOf('day');
     const endOfDay = d.endOf('day')
-    return !! occupations.find( (o) => o.arrival > startOfDay && o.arrival < endOfDay)
+    return occupations.find( (o) => o.arrival > startOfDay && o.arrival < endOfDay)
   }
 
-  const occupationEnds = ( d:DateTime ):boolean => {
+  const occupationEnds = ( d:DateTime ):Occupation|undefined => {
     const startOfDay = d.startOf('day');
     const endOfDay = d.endOf('day')
-    return !! occupations.find( (o) => o.leave > startOfDay && o.leave < endOfDay)
+    return occupations.find( (o) => o.leave > startOfDay && o.leave < endOfDay)
+  }
+
+  const occupationBackground = (d:DateTime):string => {
+    const o = occupied(d) 
+    const oStarts = occupationStarts(d);
+    const oEnds = occupationEnds(d);
+    
+    if(o || (oStarts && oEnds)) {
+      let occ = o ?? oStarts;
+      let t = defaultOccupationType
+      if(occ?.type) {
+        t = occ.type;
+      }
+      return `
+        background-color: ${t.backgroundColor};
+        color: ${t.fontColor};
+      `
+    }
+    
+    if(oStarts) {
+      let t = defaultOccupationType
+      if(oStarts.type) {
+        t = oStarts.type;
+      }
+      return `background: linear-gradient(90deg, transparent, ${t.backgroundColor});`
+    }
+
+    if(oEnds) {
+      let t = defaultOccupationType
+      if(oEnds.type) {
+        t = oEnds.type;
+      }
+      return `background: linear-gradient(90deg, ${t.backgroundColor}, transparent);`
+    }
+
+    return 'background-color: white;'
   }
 
 </script>
@@ -93,29 +200,29 @@
   <main>
     {#each months as m ( `${m.year}-${m.month}` )}
     <div class="month">
-      <header class="month-header">{m.month} / {m.year}</header>
+      <header class="month-header">{ monthHeader(m) }</header>
       <div
         style="
             grid-template-columns: {monthGridTemplateColumns};
             grid-template-rows: {monthGridTemplateRows(m)};
           " 
         class="days">
-          <div class="weekday-header" style="grid-area: columnLegend / d1 / columnLegend / d1;">Mo</div>
-          <div class="weekday-header" style="grid-area: columnLegend / d2 / columnLegend / d2;">Di</div>
-          <div class="weekday-header" style="grid-area: columnLegend / d3 / columnLegend / d3;">Mi</div>
-          <div class="weekday-header" style="grid-area: columnLegend / d4 / columnLegend / d4;">Do</div>
-          <div class="weekday-header" style="grid-area: columnLegend / d5 / columnLegend / d5;">Fr</div>
-          <div class="weekday-header" style="grid-area: columnLegend / d6 / columnLegend / d6;">Sa</div>
-          <div class="weekday-header" style="grid-area: columnLegend / d7 / columnLegend / d7;">So</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d1 / columnLegend / d1;">{weekdayHeader(1)}</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d2 / columnLegend / d2;">{weekdayHeader(2)}</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d3 / columnLegend / d3;">{weekdayHeader(3)}</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d4 / columnLegend / d4;">{weekdayHeader(4)}</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d5 / columnLegend / d5;">{weekdayHeader(5)}</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d6 / columnLegend / d6;">{weekdayHeader(6)}</div>
+          <div class="weekday-header" style="grid-area: columnLegend / d7 / columnLegend / d7;">{weekdayHeader(7)}</div>
           
           {#each days(m) as d ( `${d.year}-${d.month}-${d.day}` )}
           <div 
-              class:occupied={ occupied(d) }
-              class:occupationStarts={ occupationStarts(d) }
-              class:occupationEnds={ occupationEnds(d) }
               class:weekend={ [6,7].includes(d.weekday) }
               class="day"
-              style="grid-area: w{d.weekNumber} / d{d.weekday} / w{d.weekNumber} / d{d.weekday};"
+              style="
+                grid-area: w{d.weekNumber} / d{d.weekday} / w{d.weekNumber} / d{d.weekday};
+                {occupationBackground(d)}
+                "
             >
             {d.day}
           </div>
@@ -138,17 +245,7 @@
 </section>
 
 <style>
-  .occupationStarts {
-    background: linear-gradient(90deg, transparent, black);
-  }
-  .occupationEnds {
-    background: linear-gradient(90deg, black, transparent);
-  }
-  .occupied {
-    background-color: black;
-    color: darkolivegreen;
-  }
-
+  
   .hidden {
     display: none;
   }
