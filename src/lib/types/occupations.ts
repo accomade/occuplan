@@ -3,7 +3,7 @@ import type { DateTime } from "luxon";
 interface Occupation {
   arrival: DateTime;
   leave: DateTime;
-  type: OccupationType|undefined;
+  type?: OccupationType | undefined;
 }
 
 interface OccupationType {

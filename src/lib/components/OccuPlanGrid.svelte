@@ -157,23 +157,38 @@
   }
 
   const occupationBackground = (d:DateTime):string => {
-    const o = occupied(d) 
+    const o = occupied(d);
     const oStarts = occupationStarts(d);
     const oEnds = occupationEnds(d);
-    
-    if(o || (oStarts && oEnds)) {
-      let occ = o ?? oStarts;
+   
+    if(o) {
       let t = defaultOccupationType
-      if(occ?.type) {
-        t = occ.type;
+      if(o?.type) {
+        t = o.type;
       }
+      
       return `
         background-color: ${t.backgroundColor};
         color: ${t.fontColor};
       `
     }
+
+    if(oEnds && oStarts) {
+      let endType = defaultOccupationType
+      if(oEnds.type) {
+        endType = oEnds.type;
+      }
+      let startType = defaultOccupationType
+      if(oStarts.type) {
+        startType = oStarts.type;
+      }
+
+      return `background: linear-gradient(90deg, ${endType.backgroundColor}, ${startType.backgroundColor});`
+    }
     
     if(oStarts) {
+      console.log("starts:",oStarts.arrival.toISO())
+
       let t = defaultOccupationType
       if(oStarts.type) {
         t = oStarts.type;
@@ -182,6 +197,8 @@
     }
 
     if(oEnds) {
+      console.log("ends:",oEnds.leave.toISO())
+
       let t = defaultOccupationType
       if(oEnds.type) {
         t = oEnds.type;
@@ -189,7 +206,7 @@
       return `background: linear-gradient(90deg, ${t.backgroundColor}, transparent);`
     }
 
-    return 'background-color: white;'
+    return 'background-color: transparent;'
   }
 
 </script>

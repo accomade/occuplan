@@ -1,19 +1,34 @@
 <script lang="ts">
   import OccuPlanGrid from "../lib/components/OccuPlanGrid.svelte";
-  import type { Occupation } from "$lib/types/occupations";
+  import type { Occupation, OccupationType } from "$lib/types/occupations";
   import { DateTime } from "luxon";
+
+  let reservationType:OccupationType = {
+    name: "reservation",
+    backgroundColor: "orange",
+    fontColor: "black",
+  }
 
   let occupations:Occupation[] = [
     {
       arrival: DateTime.now(),
       leave: DateTime.now().plus({weeks: 1}),
-      type: "normal"
     },
     {
-      arrival: DateTime.fromISO("2022-01-12"),
-      leave: DateTime.fromISO("2022-02-12T13:00:00"),
-      type: "normal"
+      arrival: DateTime.fromISO("2023-04-30T12:00:00"),
+      leave: DateTime.fromISO("2023-05-12T12:00:00"),
+    },
+    {
+      arrival: DateTime.fromISO("2023-03-30T12:00:00"),
+      leave: DateTime.fromISO("2023-04-12T12:00:00"),
+      type: reservationType
+    },
+    {
+      arrival: DateTime.fromISO("2023-04-12T12:00:00"),
+      leave: DateTime.fromISO("2023-04-15T12:00:00"),
     }
+
+
   ];
 
 </script>
