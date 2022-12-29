@@ -63,13 +63,27 @@
   /** Occupation Types configuration */
   export let defaultOccupationType: OccupationType = {
     name: 'default',
-    backgroundColor: 'black',
-    fontColor: 'white',
+    backgroundColor: 'rgb(33, 158, 188)',
+    fontColor: 'rgb(2, 48, 71)',
   }
-
   /** Occupation Types ... end */
 
 
+  /** Styling */
+  export let mainBorder = '1px solid rgb(2, 48, 71)';
+  export let fontColorMain = 'rgb(2, 48, 71)';
+  export let fontColorDays = 'rgb(2, 48, 71)';
+  export let fontColorDayHeaders = 'rgb(2, 48, 71)';//'rgb(251, 133, 0)';
+  export let fontColorWeekNum = 'rgba(2, 48, 71, 0.5)';
+  export let backgroundColorDayHeaders = 'rgb(142, 202, 230)'//'rgb(33, 158, 188)';
+  export let backgroundColorWeeknum = 'transparent';//'rgb(142, 202, 230)';
+  export let backgroundColorMain = 'transparent';//'rgb(142, 202, 230)';
+  /** Styling end */
+
+  export let occupationPlanHeaderText = 'occupation plan';
+
+  export let prevYear = DateTime.now().minus({years: 1}).year;
+  export let nextYear = DateTime.now().plus({years: 1}).year;
   export let year = DateTime.now().year
   export let firstMonth = DateTime.now().month
 
@@ -156,15 +170,24 @@
     return occupations.find( (o) => o.leave > startOfDay && o.leave < endOfDay)
   }
 
-  const occupationBackground = (d:DateTime):string => {
+  const occupationStyle = (d:DateTime, m:DateTime):string => {
     const o = occupied(d);
     const oStarts = occupationStarts(d);
     const oEnds = occupationEnds(d);
+    const otherMonth = d.month !== m.month
    
     if(o) {
       let t = defaultOccupationType
       if(o?.type) {
         t = o.type;
+      }
+      
+      if(otherMonth) {
+        return `
+          background-color: ${t.backgroundColor};
+          color: ${t.fontColor};
+          opacity: 0.3;
+        `  
       }
       
       return `
@@ -183,37 +206,112 @@
         startType = oStarts.type;
       }
 
-      return `background: linear-gradient(90deg, ${endType.backgroundColor}, ${startType.backgroundColor});`
+      if(otherMonth) {
+        return `
+        background: linear-gradient(90deg, ${endType.backgroundColor}, ${startType.backgroundColor});
+        color: ${fontColorDays};
+        opacity: 0.3;
+        `
+      }      
+
+      return `
+        background: linear-gradient(90deg, ${endType.backgroundColor}, ${startType.backgroundColor});
+        color: ${fontColorDays};
+        `
     }
     
     if(oStarts) {
-      console.log("starts:",oStarts.arrival.toISO())
-
+      
       let t = defaultOccupationType
       if(oStarts.type) {
         t = oStarts.type;
       }
-      return `background: linear-gradient(90deg, transparent, ${t.backgroundColor});`
+
+      if(otherMonth) {
+        return `
+        background: linear-gradient(90deg, ${backgroundColorMain}, ${t.backgroundColor});
+        color: ${fontColorDays};
+        opacity: 0.3;
+        `  
+      }
+
+      return `
+        background: linear-gradient(90deg, ${backgroundColorMain}, ${t.backgroundColor});
+        color: ${fontColorDays};
+        `
     }
 
     if(oEnds) {
-      console.log("ends:",oEnds.leave.toISO())
-
+      
       let t = defaultOccupationType
       if(oEnds.type) {
         t = oEnds.type;
       }
-      return `background: linear-gradient(90deg, ${t.backgroundColor}, transparent);`
+
+      if(otherMonth) {
+        return `
+        background: linear-gradient(90deg, ${t.backgroundColor}, ${backgroundColorMain});
+        color: ${fontColorDays};
+        opacity: 0.3;
+        `  
+      }
+
+      return `
+        background: linear-gradient(90deg, ${t.backgroundColor}, ${backgroundColorMain});
+        color: ${fontColorDays};
+        `
     }
 
-    return 'background-color: transparent;'
+    if(otherMonth) {
+      return `
+      background-color: ${backgroundColorMain};
+      color: ${fontColorDays};
+      opacity: 0.3;
+      `
+    }
+
+    return `
+      background-color: ${backgroundColorMain};
+      color: ${fontColorDays};
+      `
+  }
+
+
+  const nextYearClicked = () => {
+    prevYear = year;
+    year = nextYear;
+    nextYear++;
+  }
+
+  const prevYearClicked = () => {
+    nextYear = year;
+    year = prevYear;
+    prevYear--;
   }
 
 </script>
 
 
-<section class="occuplan-wrapper">
-  <header>header</header>
+<section 
+    style="
+      border: {mainBorder};
+      color: {fontColorMain};
+      background-color: {backgroundColorMain};
+    "
+    class="occuplan-wrapper">
+  <header class="occupation-plan-header">
+    <div class="left-header-controls">
+      {#if prevYear}
+        <button on:click={prevYearClicked}>{prevYear}</button>
+      {/if}
+    </div>
+    <div class="header-label">{ occupationPlanHeaderText}</div>
+    <div class="right-header-controls">
+      {#if nextYear}
+        <button on:click={nextYearClicked}>{nextYear}</button>
+      {/if}
+    </div>
+  </header>
   <main>
     {#each months as m ( `${m.year}-${m.month}` )}
     <div class="month">
@@ -224,21 +322,43 @@
             grid-template-rows: {monthGridTemplateRows(m)};
           " 
         class="days">
-          <div class="weekday-header" style="grid-area: columnLegend / d1 / columnLegend / d1;">{weekdayHeader(1)}</div>
-          <div class="weekday-header" style="grid-area: columnLegend / d2 / columnLegend / d2;">{weekdayHeader(2)}</div>
-          <div class="weekday-header" style="grid-area: columnLegend / d3 / columnLegend / d3;">{weekdayHeader(3)}</div>
-          <div class="weekday-header" style="grid-area: columnLegend / d4 / columnLegend / d4;">{weekdayHeader(4)}</div>
-          <div class="weekday-header" style="grid-area: columnLegend / d5 / columnLegend / d5;">{weekdayHeader(5)}</div>
-          <div class="weekday-header" style="grid-area: columnLegend / d6 / columnLegend / d6;">{weekdayHeader(6)}</div>
-          <div class="weekday-header" style="grid-area: columnLegend / d7 / columnLegend / d7;">{weekdayHeader(7)}</div>
+          <div class="weekday-header" style="
+            background-color: {backgroundColorDayHeaders};
+            color: {fontColorDayHeaders};
+            grid-area: columnLegend / d1 / columnLegend / d1;">{weekdayHeader(1)}</div>
+          <div class="weekday-header" style="
+            background-color: {backgroundColorDayHeaders};
+            color: {fontColorDayHeaders};
+            grid-area: columnLegend / d2 / columnLegend / d2;">{weekdayHeader(2)}</div>
+          <div class="weekday-header" style="
+            background-color: {backgroundColorDayHeaders};
+            color: {fontColorDayHeaders};
+            grid-area: columnLegend / d3 / columnLegend / d3;">{weekdayHeader(3)}</div>
+          <div class="weekday-header" style="
+            background-color: {backgroundColorDayHeaders};
+            color: {fontColorDayHeaders};
+            grid-area: columnLegend / d4 / columnLegend / d4;">{weekdayHeader(4)}</div>
+          <div class="weekday-header" style="
+            background-color: {backgroundColorDayHeaders};
+            color: {fontColorDayHeaders};
+            grid-area: columnLegend / d5 / columnLegend / d5;">{weekdayHeader(5)}</div>
+          <div class="weekday-header" style="
+            background-color: {backgroundColorDayHeaders};
+            color: {fontColorDayHeaders};
+            grid-area: columnLegend / d6 / columnLegend / d6;">{weekdayHeader(6)}</div>
+          <div class="weekday-header" style="
+            background-color: {backgroundColorDayHeaders};
+            color: {fontColorDayHeaders};
+            grid-area: columnLegend / d7 / columnLegend / d7;">{weekdayHeader(7)}</div>
           
           {#each days(m) as d ( `${d.year}-${d.month}-${d.day}` )}
           <div 
               class:weekend={ [6,7].includes(d.weekday) }
+              class:other-month={ m.month !== d.month }
               class="day"
               style="
                 grid-area: w{d.weekNumber} / d{d.weekday} / w{d.weekNumber} / d{d.weekday};
-                {occupationBackground(d)}
+                {occupationStyle(d, m)}
                 "
             >
             {d.day}
@@ -249,7 +369,10 @@
           <div
               class:hidden={ hiddenWeekNum(m, w)}
               class="week-number"
-              style="grid-area: w{w.weekNumber} / rowLegend / w{w.weekNumber} / rowLegend;"
+              style="
+                background-color: {backgroundColorWeeknum};
+                color: {fontColorWeekNum};    
+                grid-area: w{w.weekNumber} / rowLegend / w{w.weekNumber} / rowLegend;"
             >
             {w.weekNumber}
           </div>
@@ -262,23 +385,33 @@
 </section>
 
 <style>
+  .month-header {
+    text-align: center;
+  }
   
   .hidden {
     display: none;
+  }
+
+  .occupation-plan-header {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .header-label {
+    text-transform: capitalize;
+    font-weight: bold;
   }
 
   .week-number {
     text-align: left;
     font-style: italic;
     font-weight: lighter;
-    color: grey;
   }
 
   .weekday-header {
     text-align: center;
-    background-color: darkslategray;
-    color: aliceblue;
-  }
+   }
 
   .day {
     text-align: center;
@@ -289,10 +422,9 @@
   }
 
   .occuplan-wrapper {
-    border: 1px solid black;
     height: 100%;
-    width: 100%;
-    padding: 0;
+    width: calc(100% -0.5rem);
+    padding: 0.5rem;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -302,7 +434,7 @@
 
   main {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
     gap: 1rem;
     width: 100%;
   }
