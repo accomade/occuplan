@@ -43,3 +43,12 @@
     <OccuPlanGrid {occupations}/>
   </section>
 </main>
+
+
+<style>
+  :global( button ) {
+    background-color: wheat;
+  }
+
+
+</style>

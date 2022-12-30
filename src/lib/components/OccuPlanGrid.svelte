@@ -80,11 +80,27 @@
   export let backgroundColorMain = 'transparent';//'rgb(142, 202, 230)';
   /** Styling end */
 
-  export let occupationPlanHeaderText = 'occupation plan';
+  export let headerContent = 'occupation plan';
+  export let footerContent = `
+    <a 
+        style="color: ${fontColorMain}; filter: opacity(0.3);"
+        href="https://github.com/accomade/occuplan" 
+        target="_blank">
+      Occuplan is OSS
+    </a>`;
 
-  export let prevYear = DateTime.now().minus({years: 1}).year;
-  export let nextYear = DateTime.now().plus({years: 1}).year;
+  export let buttonStyle = `
+    background-color: ${backgroundColorMain};
+    border: 1px solid ${fontColorMain};
+    border-radius: 0.5rem;
+    filter: drop-shadow(0 0 0.2rem ${fontColorMain});
+  `
+
+  
   export let year = DateTime.now().year
+  export let maxYear = DateTime.local(year).plus({years: 2}).year
+  export let minYear = year;
+
   export let firstMonth = DateTime.now().month
 
   // 1 => Monday; always Monday. Don't overcomplicate things
@@ -92,10 +108,15 @@
   export let numberOfMonth = 12;
   export let occupations:Occupation[] = [];
   
+  $: prevYear = DateTime.local(year).minus({years: 1}).year;
+  $: nextYear = DateTime.local(year).plus({years: 1}).year;
+  
   let months:DateTime[] = [];
   $: {
+    
+    
     let fMonth = DateTime.utc(year, firstMonth, 1)
-    months.push(fMonth);
+    months = [fMonth];
     
     let nMonth = fMonth.plus({months: 1})
     for (let c = 1; c < numberOfMonth; c++) {
@@ -301,14 +322,14 @@
     class="occuplan-wrapper">
   <header class="occupation-plan-header">
     <div class="left-header-controls">
-      {#if prevYear}
-        <button on:click={prevYearClicked}>{prevYear}</button>
+      {#if prevYear >= minYear}
+        <button style={buttonStyle} on:click={prevYearClicked}>{prevYear}</button>
       {/if}
     </div>
-    <div class="header-label">{ occupationPlanHeaderText}</div>
+    <div class="header-label">{@html headerContent}</div>
     <div class="right-header-controls">
-      {#if nextYear}
-        <button on:click={nextYearClicked}>{nextYear}</button>
+      {#if nextYear <= maxYear}
+        <button style={buttonStyle} on:click={nextYearClicked}>{nextYear}</button>
       {/if}
     </div>
   </header>
@@ -381,7 +402,7 @@
     </div>
     {/each}
   </main>
-  <footer>footer</footer>
+  <footer>{@html footerContent}</footer>
 </section>
 
 <style>
@@ -396,6 +417,8 @@
   .occupation-plan-header {
     display: flex;
     flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
   }
 
   .header-label {
@@ -446,6 +469,13 @@
 
   .days {
     display: grid;
+  }
+
+  footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 100%;
   }
 
 </style>
