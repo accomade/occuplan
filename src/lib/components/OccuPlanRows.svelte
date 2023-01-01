@@ -1,9 +1,19 @@
 <script lang="ts">
 
-  import { DateTime, type DayNumbers, type WeekdayNumbers } from 'luxon';
+  import { DateTime, type DayNumbers, type MonthNumbers, type WeekdayNumbers } from 'luxon';
   import type { Occupation, OccupationType } from '$lib/types/occupations.js';
   import type { I18n, MonthLabels } from '$lib/types/i18n.js';
   
+  /** Helpers */
+  interface DayHelper {
+    day: number,
+    month: MonthNumbers,
+    year: number
+  }
+
+  /** Helpers end */
+
+
   /** I18n month labels */
   
   export const defaultMonthLabels:MonthLabels = {
@@ -37,15 +47,17 @@
 
   /** Styling */
   export let mainBorder = '1px solid rgb(2, 48, 71)';
+  export let gridBorder = '0.2px solid rgba(2, 48, 71, 0.2)';
   export let fontColorMain = 'rgb(2, 48, 71)';
-  export let fontColorDays = 'rgb(2, 48, 71)';
   export let fontColorDayHeaders = 'rgb(2, 48, 71)';//'rgb(251, 133, 0)';
-  export let fontColorMonths = 'rgba(2, 48, 71, 0.5)';
+  export let fontColorMonths = 'rgb(2, 48, 71)';//'rgba(2, 48, 71, 0.5)';
   
+  export let backgroundHueWeekend = 'rgb(2, 48, 71)';
   export let backgroundColorDayHeaders = 'rgb(142, 202, 230)'//'rgb(33, 158, 188)';
-  export let backgroundColorMonths = 'transparent';//'rgb(142, 202, 230)';
+  export let backgroundColorMonths = 'rgb(142, 202, 230)';//'rgb(142, 202, 230)';
   export let backgroundColorMain = 'transparent';//'rgb(142, 202, 230)';
-  
+  export let backgroundColorInvalidDays = 'rgba(110,110,110,0.6)';
+
   export let buttonStyle = `
     background-color: ${backgroundColorMain};
     border: 1px solid ${fontColorMain};
@@ -111,20 +123,20 @@
   const monthDays = [...Array(31).keys()].map((i) => i+1);
   $:months = [...Array(numberOfMonth).keys()].map((n) => DateTime.local(year, firstMonth).plus({months: n}));
   
-  let days:DateTime[];
+  let days:DayHelper[];
   $: {
-    days = []
-    months.forEach( (m) => {
-      let firstDayOfMonth = m.startOf("month")
-      let lastDayOfMonth = m.endOf("month")
-      let d = firstDayOfMonth;
-      while(d < lastDayOfMonth) {
-        days.push(d)
-        d = d.plus({days: 1})
+    days = [];
+    for(const m of months) {
+      for(let d:DayNumbers = 1; d <= 31; d++) {
+        days.push({
+          day: d,
+          month: m.month,
+          year: m.year,
+        })
       }
-    })
+    }
   }
-
+  
 
   $:monthGridTemplateColumns = monthDays.reduce( (s, d) => {
       s += ` [d${d}] 1fr`;
@@ -135,8 +147,6 @@
     s += ` [m${m.month}y${m.year}] 1fr`;
     return s;
   }, '[columnLegend] 1fr');
-  
-
   
   /** Date calculations end */
 
@@ -149,10 +159,24 @@
     backgroundColor: 'rgb(33, 158, 188)',
     fontColor: 'rgb(2, 48, 71)',
   }
+
+  let occupationTypes = [ defaultOccupationType ]
+  const addType = (t:OccupationType) => {
+    const found = occupationTypes.find( (et) => et.name === t.name)
+    if(!found) {
+      occupationTypes.push(t)
+    }
+  }
+
   /** Occupation Types ... end */
 
 
   export let occupations:Occupation[] = [];
+
+  const validDay = (d:DayHelper):boolean => {
+    const m = DateTime.local(d.year, d.month)
+    return d.day <= m.endOf("month").day
+  }
 
   const occupied = ( d:DateTime ):Occupation|undefined => {
     const startOfDay = d.startOf('day');
@@ -172,30 +196,111 @@
     return occupations.find( (o) => o.leave > startOfDay && o.leave < endOfDay)
   }
 
-  const occupationStyle = (d:DateTime):string => {
-    const o = occupied(d);
-    const oStarts = occupationStarts(d);
-    const oEnds = occupationEnds(d);
+  const occupationStyle = (d:DayHelper):string => {
+    const valid = validDay(d)
+    if(!valid) {
+      return `
+        background-color: ${backgroundColorInvalidDays};
+        `
+    }
+
+    const day = DateTime.local(d.year, d.month, d.day)
+    const o = occupied(day);
+    const oStarts = occupationStarts(day);
+    const oEnds = occupationEnds(day);
+    const isWeekend = [6,7].includes(day.weekday)
     
     if(o) {
       let t = defaultOccupationType
-      if(o?.type) {
+      if(o.type) {
         t = o.type;
+        addType(t)
+      }
+      
+      if(isWeekend) {
+        return `
+          background: radial-gradient(${backgroundHueWeekend}, ${t.backgroundColor}, ${t.backgroundColor});
+        `
       }
       
       return `
         background-color: ${t.backgroundColor};
-        color: ${t.fontColor};
       `
+    
     }
 
-    return `
-      background-color: ${backgroundColorMain};
-      color: ${fontColorDays};
-      `
-  }
+    if(oEnds && oStarts) {
+      let endType = defaultOccupationType
+      if(oEnds.type) {
+        endType = oEnds.type;
+        addType(endType)
+      }
+      let startType = defaultOccupationType
+      if(oStarts.type) {
+        startType = oStarts.type;
+        addType(startType)
+      }
 
-  
+      if(isWeekend) {
+        return `
+          background: linear-gradient(90deg, ${endType.backgroundColor}, ${startType.backgroundColor}), radial-gradient(${backgroundHueWeekend}, ${backgroundColorMain}, ${backgroundColorMain});
+          `
+      }      
+
+      return `
+        background: linear-gradient(90deg, ${endType.backgroundColor}, ${startType.backgroundColor});
+        `
+    }
+    
+    if(oStarts) {
+      
+      let t = defaultOccupationType
+      if(oStarts.type) {
+        t = oStarts.type;
+        addType(t)
+      }
+
+      if(isWeekend) {
+        return `
+        background: linear-gradient(90deg, ${backgroundColorMain}, ${t.backgroundColor}), radial-gradient(${backgroundHueWeekend}, ${backgroundColorMain}, ${backgroundColorMain});
+        `  
+      }
+
+      return `
+        background: linear-gradient(90deg, ${backgroundColorMain}, ${t.backgroundColor});
+        `
+    }
+
+    if(oEnds) {
+      
+      let t = defaultOccupationType
+      if(oEnds.type) {
+        t = oEnds.type;
+        addType(t)
+      }
+
+      if(isWeekend) {
+        return `
+        background: linear-gradient(90deg, ${t.backgroundColor}, ${backgroundColorMain}), radial-gradient(${backgroundHueWeekend}, ${backgroundColorMain}, ${backgroundColorMain});
+        `  
+      }
+
+      return `
+        background: linear-gradient(90deg, ${t.backgroundColor}, ${backgroundColorMain});
+        `
+    }
+
+    if(isWeekend) {
+      return `
+        background: radial-gradient(${backgroundHueWeekend}, ${backgroundColorMain}, ${backgroundColorMain});
+      `
+    }
+    
+    return `
+        background-color: ${backgroundColorMain};
+      `
+    
+  }
   /** Occupations end*/
 
 </script>
@@ -211,12 +316,16 @@
     <div class="left-header-controls">
       {#if prevYear >= minYear}
         <button style={buttonStyle} on:click={prevYearClicked}>{prevYear}</button>
+      {:else}
+        <span>&nbsp;</span>
       {/if}
     </div>
-    <div class="header-label">{@html headerContent}</div>
+    <div class="header-label">{@html headerContent}&nbsp;({year})</div>
     <div class="right-header-controls">
       {#if nextYear <= maxYear}
         <button style={buttonStyle} on:click={nextYearClicked}>{nextYear}</button>
+      {:else}
+        <span>&nbsp;</span>
       {/if}
     </div>
   </header>
@@ -224,8 +333,14 @@
     grid-template-columns: {monthGridTemplateColumns};
     grid-template-rows: {monthGridTemplateRows};
     ">
+    <div style="
+      grid-area: columnLegend / rowLegend /columnLegend / rowLegend;
+      background-color: {backgroundColorMain};
+      ">&nbsp;</div>
+
     {#each monthDays as d}
       <div class="monthday-header" style="
+        outline: {gridBorder};
         background-color: {backgroundColorDayHeaders};
         color: {fontColorDayHeaders};
         grid-area: columnLegend / d{d} / columnLegend / d{d};">{d}</div>
@@ -235,7 +350,9 @@
       <div 
           class="month-label" 
           style="
-            color: green;
+            outline: {gridBorder};
+            color: {fontColorMonths};
+            background-color: {backgroundColorMonths};
             grid-area: m{m.month}y{m.year} / rowLegend / m{m.month}y{m.year} / rowLegend;">
         {monthHeader(m)}
       </div>
@@ -243,22 +360,69 @@
 
     {#each days as d ( `${d.year}-${d.month}-${d.day}` )}
       <div 
-          class:weekend={ [6,7].includes(d.weekday) }
           class="day"
           style="
+            outline: {gridBorder};
             grid-area: m{d.month}y{d.year}  / d{d.day} / m{d.month}y{d.year} / d{d.day};
             {occupationStyle(d)}
             "
         >
-        {d.day}
+        &nbsp;
+      </div>
+    {/each}
+  </main>
+  <footer>
+    <div class="legend">
+      <div class="legend-entry">
+        <label for="weenkend-legend">Weekend</label>
+        <div 
+            id="weekend-legend"
+            class="legend-entry-marker"
+            style="
+              outline: {gridBorder};
+              background: radial-gradient({backgroundHueWeekend}, {backgroundColorMain}, {backgroundColorMain});
+              ">
+          &nbsp;
+        </div>
+      </div>
+      {#each occupationTypes as t}
+      <div class="legend-entry">
+        <label for="occupation-type-{t.name}-legend">{t.name}</label>
+        <div 
+            id="occupation-type-{t.name}-legend"
+            class="legend-entry-marker"
+            style="
+              background-color: {t.backgroundColor};
+              outline: {gridBorder};
+              ">
+          &nbsp;
+        </div>
       </div>
       {/each}
-  </main>
-  <footer>{@html footerContent}</footer>
+    </div> 
+    <div>
+      {@html footerContent}
+    </div>
+  </footer>
 
 </section>
 
 <style>
+  .legend {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .legend-entry {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .legend-entry-marker {
+    width: 1rem;
+    height: 1rem;
+  }
+
   main {
     display: grid;
     width: 100%;
@@ -273,6 +437,7 @@
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
+    margin-bottom: 0.5rem;
   }
 
   .header-label {
@@ -296,6 +461,7 @@
     flex-direction: column;
     align-items: flex-end;
     width: 100%;
+    margin-top: 1rem;
   }
 
 </style>
