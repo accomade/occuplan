@@ -160,11 +160,13 @@
     fontColor: 'rgb(2, 48, 71)',
   }
 
-  let occupationTypes = [ defaultOccupationType ]
+  let occupationTypes:OccupationType[] = [ defaultOccupationType ]
+  
   const addType = (t:OccupationType) => {
+
     const found = occupationTypes.find( (et) => et.name === t.name)
     if(!found) {
-      occupationTypes.push(t)
+      occupationTypes = [...occupationTypes, t]
     }
   }
 
@@ -373,20 +375,17 @@
   </main>
   <footer>
     <div class="legend">
-      <div class="legend-entry">
-        <label for="weenkend-legend">Weekend</label>
-        <div 
-            id="weekend-legend"
-            class="legend-entry-marker"
-            style="
-              outline: {gridBorder};
-              background: radial-gradient({backgroundHueWeekend}, {backgroundColorMain}, {backgroundColorMain});
-              ">
-          &nbsp;
-        </div>
+      <label for="weenkend-legend">Weekend</label>
+      <div 
+          id="weekend-legend"
+          class="legend-entry-marker"
+          style="
+            outline: {gridBorder};
+            background: radial-gradient({backgroundHueWeekend}, {backgroundColorMain}, {backgroundColorMain});
+            ">
+        &nbsp;
       </div>
       {#each occupationTypes as t}
-      <div class="legend-entry">
         <label for="occupation-type-{t.name}-legend">{t.name}</label>
         <div 
             id="occupation-type-{t.name}-legend"
@@ -397,7 +396,6 @@
               ">
           &nbsp;
         </div>
-      </div>
       {/each}
     </div> 
     <div>
@@ -409,13 +407,9 @@
 
 <style>
   .legend {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .legend-entry {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: [label] 1fr [marker] 1rem;
+    column-gap: 1rem;
   }
 
   .legend-entry-marker {
@@ -458,8 +452,9 @@
 
   footer {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
     width: 100%;
     margin-top: 1rem;
   }
