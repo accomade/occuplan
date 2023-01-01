@@ -1,4 +1,5 @@
 <script lang="ts">
+  import OccuplanRows from '../lib/components/OccuPlanRows.svelte'
   import OccuPlanGrid from "../lib/components/OccuPlanGrid.svelte";
   import type { Occupation, OccupationType } from "$lib/types/occupations";
   import { DateTime } from "luxon";
@@ -38,11 +39,17 @@
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
 <main>
+  <h2>RowsExample</h2>
+  <section>
+    <OccuplanRows {occupations}/>
+  </section>
+
   <h2>GridExample</h2>
   <section>
     <OccuPlanGrid {occupations}/>
   </section>
 </main>
+
 
 
 <style>

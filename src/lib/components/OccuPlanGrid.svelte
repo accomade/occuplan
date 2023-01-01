@@ -4,7 +4,7 @@
   import type { WeekdayLabels, MonthLabels, I18n } from '$lib/types/i18n.js';
   
 
-  /** I18n ... monnth and weekday labels */
+  /** I18n ... month and weekday labels */
   export const defaultWeekdayLabels:WeekdayLabels = {
     1: 'Mo',
     2: 'Tu',
@@ -78,8 +78,17 @@
   export let backgroundColorDayHeaders = 'rgb(142, 202, 230)'//'rgb(33, 158, 188)';
   export let backgroundColorWeeknum = 'transparent';//'rgb(142, 202, 230)';
   export let backgroundColorMain = 'transparent';//'rgb(142, 202, 230)';
+  
+  export let buttonStyle = `
+    background-color: ${backgroundColorMain};
+    border: 1px solid ${fontColorMain};
+    border-radius: 0.5rem;
+    filter: drop-shadow(0 0 0.2rem ${fontColorMain});
+  `
   /** Styling end */
 
+
+  /** Hedear & Footer */
   export let headerContent = 'occupation plan';
   export let footerContent = `
     <a 
@@ -88,15 +97,10 @@
         target="_blank">
       Occuplan is OSS
     </a>`;
-
-  export let buttonStyle = `
-    background-color: ${backgroundColorMain};
-    border: 1px solid ${fontColorMain};
-    border-radius: 0.5rem;
-    filter: drop-shadow(0 0 0.2rem ${fontColorMain});
-  `
-
+  /** Header & Footer end*/
   
+
+  /** Date calculations */
   export let year = DateTime.now().year
   export let maxYear = DateTime.local(year).plus({years: 2}).year
   export let minYear = year;
@@ -106,7 +110,6 @@
   // 1 => Monday; always Monday. Don't overcomplicate things
   //export let firstDayOfWeek = 1;
   export let numberOfMonth = 12;
-  export let occupations:Occupation[] = [];
   
   $: prevYear = DateTime.local(year).minus({years: 1}).year;
   $: nextYear = DateTime.local(year).plus({years: 1}).year;
@@ -125,6 +128,20 @@
     }
   }
 
+
+  const nextYearClicked = () => {
+    prevYear = year;
+    year = nextYear;
+    nextYear++;
+  }
+
+  const prevYearClicked = () => {
+    nextYear = year;
+    year = prevYear;
+    prevYear--;
+  }
+
+  
   let monthGridTemplateColumns = `[rowLegend] 1fr [d1] 1fr [d2] 1fr [d3] 1fr [d4] 1fr [d5] 1fr [d6] 1fr [d7] 1fr` 
   
   let monthGridTemplateRows = (m:DateTime):string => {
@@ -173,6 +190,12 @@
     return lastDayOfMonth < firstDayOfWeek
   }
 
+  /** Date calculations end */
+
+
+  /** Occupations */
+  export let occupations:Occupation[] = [];
+  
   const occupied = ( d:DateTime ):Occupation|undefined => {
     const startOfDay = d.startOf('day');
     const endOfDay = d.endOf('day')
@@ -297,18 +320,7 @@
       `
   }
 
-
-  const nextYearClicked = () => {
-    prevYear = year;
-    year = nextYear;
-    nextYear++;
-  }
-
-  const prevYearClicked = () => {
-    nextYear = year;
-    year = prevYear;
-    prevYear--;
-  }
+  /** occupations end */
 
 </script>
 
