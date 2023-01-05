@@ -66,11 +66,23 @@
     backgroundColor: 'rgb(33, 158, 188)',
     fontColor: 'rgb(2, 48, 71)',
   }
+
+  let occupationTypes:OccupationType[] = [ defaultOccupationType ]
+  
+  const addType = (t:OccupationType) => {
+
+    const found = occupationTypes.find( (et) => et.name === t.name)
+    if(!found) {
+      occupationTypes = [...occupationTypes, t]
+    }
+  }
+
   /** Occupation Types ... end */
 
 
   /** Styling */
   export let mainBorder = '1px solid rgb(2, 48, 71)';
+  export let gridBorder = '0.2px solid rgba(2, 48, 71, 0.2)';
   export let fontColorMain = 'rgb(2, 48, 71)';
   export let fontColorDays = 'rgb(2, 48, 71)';
   export let fontColorDayHeaders = 'rgb(2, 48, 71)';//'rgb(251, 133, 0)';
@@ -78,6 +90,7 @@
   export let backgroundColorDayHeaders = 'rgb(142, 202, 230)'//'rgb(33, 158, 188)';
   export let backgroundColorWeeknum = 'transparent';//'rgb(142, 202, 230)';
   export let backgroundColorMain = 'transparent';//'rgb(142, 202, 230)';
+  export let backgroundColorInvalidDays = 'rgba(110,110,110,0.6)';
   
   export let buttonStyle = `
     background-color: ${backgroundColorMain};
@@ -190,6 +203,11 @@
     return lastDayOfMonth < firstDayOfWeek
   }
 
+  const today = DateTime.now()
+  const validDay = (d:DateTime):boolean => {
+    return d > today
+  }
+
   /** Date calculations end */
 
 
@@ -215,6 +233,15 @@
   }
 
   const occupationStyle = (d:DateTime, m:DateTime):string => {
+    const valid = validDay(d)
+    if(!valid) {
+      return `
+      color: ${backgroundColorInvalidDays};
+      opacity: 0.3;
+      background-color: ${backgroundColorInvalidDays};
+        `
+    }
+
     const o = occupied(d);
     const oStarts = occupationStarts(d);
     const oEnds = occupationEnds(d);
@@ -224,6 +251,7 @@
       let t = defaultOccupationType
       if(o?.type) {
         t = o.type;
+        addType(t)
       }
       
       if(otherMonth) {
@@ -244,10 +272,12 @@
       let endType = defaultOccupationType
       if(oEnds.type) {
         endType = oEnds.type;
+        addType(endType)
       }
       let startType = defaultOccupationType
       if(oStarts.type) {
         startType = oStarts.type;
+        addType(startType)
       }
 
       if(otherMonth) {
@@ -269,6 +299,7 @@
       let t = defaultOccupationType
       if(oStarts.type) {
         t = oStarts.type;
+        addType(t)
       }
 
       if(otherMonth) {
@@ -290,6 +321,7 @@
       let t = defaultOccupationType
       if(oEnds.type) {
         t = oEnds.type;
+        addType(t)
       }
 
       if(otherMonth) {
@@ -414,10 +446,34 @@
     </div>
     {/each}
   </main>
-  <footer>{@html footerContent}</footer>
+  <footer>
+    <div class="legend">
+      {#each occupationTypes as t}
+        <label for="occupation-type-{t.name}-legend">{t.name}</label>
+        <div 
+            id="occupation-type-{t.name}-legend"
+            class="legend-entry-marker"
+            style="
+              background-color: {t.backgroundColor};
+              outline: {gridBorder};
+              ">
+          &nbsp;
+        </div>
+      {/each}
+    </div> 
+    <div class="footer-content">
+      {@html footerContent}
+    </div>
+  </footer>
 </section>
 
 <style>
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
   .month-header {
     text-align: center;
   }
@@ -436,6 +492,7 @@
   .header-label {
     text-transform: capitalize;
     font-weight: bold;
+    font-variant: small-caps;
   }
 
   .week-number {
@@ -485,9 +542,19 @@
 
   footer {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
     width: 100%;
+    margin-top: 1rem;
+  }
+
+  .legend {
+    display: grid;
+    grid-template-columns: [label] 1fr [marker] 1rem;
+    column-gap: 1rem;
+    text-transform: capitalize;
+    font-variant: small-caps;
   }
 
 </style>

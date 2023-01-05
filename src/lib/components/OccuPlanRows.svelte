@@ -10,7 +10,6 @@
     month: MonthNumbers,
     year: number
   }
-
   /** Helpers end */
 
 
@@ -30,6 +29,7 @@
     11: 'Nov',
     12: 'Dec',
   }
+  export const defaultWeekendLabel:string = "Weekend"
 
   export let i18n:I18n = {
     monthLabels: defaultMonthLabels,
@@ -43,7 +43,7 @@
     }
     return monthLabel
   }
-  /** I18n end*/
+  /** I18n end */
 
   /** Styling */
   export let mainBorder = '1px solid rgb(2, 48, 71)';
@@ -174,9 +174,14 @@
 
 
   export let occupations:Occupation[] = [];
-
+  
+  const today = DateTime.now()
   const validDay = (d:DayHelper):boolean => {
-    const m = DateTime.local(d.year, d.month)
+    const m = DateTime.local(d.year, d.month, d.day)
+    if (m < today) {
+      return false
+    }
+
     return d.day <= m.endOf("month").day
   }
 
@@ -375,7 +380,7 @@
   </main>
   <footer>
     <div class="legend">
-      <label for="weenkend-legend">Weekend</label>
+      <label for="weenkend-legend">{i18n.weekendLabel ? i18n.weekendLabel : defaultWeekendLabel}</label>
       <div 
           id="weekend-legend"
           class="legend-entry-marker"
@@ -398,7 +403,7 @@
         </div>
       {/each}
     </div> 
-    <div>
+    <div class="footer-content">
       {@html footerContent}
     </div>
   </footer>
@@ -406,10 +411,18 @@
 </section>
 
 <style>
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
   .legend {
     display: grid;
     grid-template-columns: [label] 1fr [marker] 1rem;
     column-gap: 1rem;
+    text-transform: capitalize;
+    font-variant: small-caps;
   }
 
   .legend-entry-marker {
@@ -420,10 +433,20 @@
   main {
     display: grid;
     width: 100%;
+    max-width: 44rem;
+  }
+
+  .month-label {
+    display: flex;
+    align-items: center;
   }
 
   .monthday-header {
     text-align: center;
+    aspect-ratio: 1;
+    display: inline-grid;
+    align-content: center;
+  
   }
 
   .occupation-plan-header {
@@ -436,6 +459,7 @@
 
   .header-label {
     text-transform: capitalize;
+    font-variant: small-caps;
     font-weight: bold;
   }
 
@@ -453,7 +477,7 @@
   footer {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: stretch;
     justify-content: space-between;
     width: 100%;
     margin-top: 1rem;
