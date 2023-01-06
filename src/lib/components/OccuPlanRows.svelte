@@ -80,11 +80,11 @@
   
 
   /** Date calculations */
-  export let year = DateTime.now().year
+  export let year = DateTime.now().startOf("year").year
   export let maxYear = DateTime.local(year).plus({years: 2}).year
   export let minYear = year;
 
-  export let firstMonth = DateTime.now().month
+  export let firstMonth = DateTime.now().startOf("year").month
 
   // 1 => Monday; always Monday. Don't overcomplicate things
   //export let firstDayOfWeek = 1;
