@@ -12,4 +12,6 @@ interface OccupationType {
   fontColor: string;
 }
 
+export type OccupationCallback = (occupation: Occupation) => void
+
 export type { Occupation, OccupationType }

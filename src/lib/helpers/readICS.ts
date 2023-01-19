@@ -1,17 +1,20 @@
-import type { Occupation } from "$lib/types/occupations";
+import type { Occupation, OccupationCallback } from "$lib/types/occupations";
 
-const url = "https://calendar.google.com/calendar/ical/0512a05fa900ee7118de13a14d5244d3ebe2eba056af845e76996e6b9c4f885c%40group.calendar.google.com/public/basic.ics"
-
-export const fetchICS = async ( u:URL ):Promise<ReadableStreamDefaultReader|undefined> => {
-  const resp = await fetch(url)
-  return resp.body?.pipeThrough(new TextDecoderStream()).getReader();
-}
-
-export const streamEvents = (
-    reader: ReadableStreamDefaultReader,
-    eventCallback: VoidFunction,
-  ) :Promise<Occupation[]> => {
+export const streamEvents = async (
+    url: string,
+    eventCallback: OccupationCallback,
+  ) :Promise<Occupation[] | undefined> => {
   
+  const resp = await fetch(url)
+  console.log(resp)
+
+  return;
+  /*
+  if(!resp.ok) throw new Error("Not a valid ICS URL")
+  if(!resp.body) throw new Error("Not a valid ICS URL")
+  const reader = resp.body?.pipeThrough(new TextDecoderStream()).getReader();
+  if(!reader) throw new Error("Not a valid ICS URL")
+
   return new Promise<Occupation[]>( (res, rej) => {
     const result:Occupation[] = []
   
@@ -24,6 +27,7 @@ export const streamEvents = (
 
     return result
   })
+  */
 }
 
 /*
