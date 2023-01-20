@@ -66,6 +66,20 @@
     `
   }
 
+  /**
+   * Header & Footer
+   */
+
+  export let headerContent = 'Belegung';
+  export let footerContent = `
+    <a 
+        style="color: 'rgb(2, 48, 71)'; filter: opacity(0.3);"
+        href="https://github.com/accomade/occuplan"
+        rel="noreferrer"
+        target="_blank">
+      Occuplan is OSS
+    </a>`;
+
   //e.g. https://calendar.google.com/calendar/ical/0512a05fa900ee7118de13a14d5244d3ebe2eba056af845e76996e6b9c4f885c%40group.calendar.google.com/public/basic.ics
   export let calUrl:string;
   $: encodedCalUrl = encodeURIComponent(calUrl)
@@ -97,9 +111,9 @@ Error occured: {err}. <br>Check calendarURL: {calUrl}
 
 <div class="calendar-wrapper" bind:clientWidth={w}>
   {#if w > 640}
-  <OccuPlanRows {occupations} {...style} i18n={translations} {defaultOccupationType}/>
+  <OccuPlanRows {headerContent} {footerContent} {occupations} {...style} i18n={translations} {defaultOccupationType}/>
   {:else}
-  <OccuPlanGrid {occupations} {...style} i18n={translations} {defaultOccupationType}/>
+  <OccuPlanGrid {headerContent} {footerContent} {occupations} {...style} i18n={translations} {defaultOccupationType}/>
   {/if}
 </div>
 
