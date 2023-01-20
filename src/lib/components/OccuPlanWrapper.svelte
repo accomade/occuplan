@@ -17,13 +17,10 @@
   
   let err = '';
   $: {
-    try {
-      err = '';
-      if(!!calUrl) getEvents(url, eventsIncomingCallback)
-    }
-    catch(e) {
-      err = `Error ${e}`;
-    }
+    err = '';
+    if(!!calUrl) getEvents(url, eventsIncomingCallback).catch( (e) => {
+      err = `${e}`;
+    })
   }
   /*
     use different component based on different media size.
@@ -32,9 +29,11 @@
 	
 </script>
 {#if err}
-Error occured: ${err}. Check calendarURL: ${url}
+<div class="error">
+Error occured: {err}. <br>Check calendarURL: {calUrl}
+</div>
 {/if}
-{url}
+
 <div class="calendar-wrapper" bind:clientWidth={w}>
   {#if w > 640}
   <OccuPlanRows {occupations} />
@@ -47,5 +46,9 @@ Error occured: ${err}. Check calendarURL: ${url}
   .calendar-wrapper {
     min-width: 210px;
     max-width: 820px;
+  }
+  .error {
+    font-weight: bolder;
+    color: darkred;
   }
 </style>
