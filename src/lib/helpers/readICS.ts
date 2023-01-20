@@ -39,6 +39,23 @@ export const getEvents = async (
 
 const getDate = (icsLine: string):DateTime => {
   //e.g. DTEND;VALUE=DATE:20260818
-  const dateString = icsLine.split("=")[1].split(":")[1]
-  return lx.fromISO(dateString).set({hour:12, minute:0, second:0, millisecond:0})
+  const [typePart, valuePart] = icsLine.split("=")
+  
+  const dateString = valuePart.split(":")[1]
+  let rawDateTime = lx.fromISO(dateString)
+  
+  //end date has to be moved back when whole day ending
+  if(/^DTEND;VALUE$/.test(typePart)) {
+    if(
+        rawDateTime.hour == 0 && 
+        rawDateTime.minute == 0 && 
+        rawDateTime.second == 0 &&
+        rawDateTime.millisecond == 0
+      ) {
+        rawDateTime = rawDateTime.minus({hour: 12})
+      }
+  }
+
+  //normalize to noon
+  return rawDateTime.set({hour:12, minute:0, second:0, millisecond:0})
 }

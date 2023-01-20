@@ -1,38 +1,11 @@
-# create-svelte
+# OccuPlan
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+OccuPlan consists of two calendar components (a grid view and a month-rows view) and a third components that wraps both to provide some responsiveness. And switches between the two views based on the container size.
 
-## Creating a project
+Each can be embedded into your website.
 
-If you're seeing this, you've probably already done this step. Congrats!
+The wrapper has an additional functionality. It let's you define an calUrl. Which you can point to an iCal file. The events in this file will be displayed in the calendar views.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+# License
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+MIT ... see license file
