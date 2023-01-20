@@ -10,7 +10,7 @@
     month: MonthNumbers,
     year: number
   }
-  interface DayHelperWithStyle extends DayHelper {
+  interface DayHelperWithStyle extends DayHelper{
     style: string
   }
 

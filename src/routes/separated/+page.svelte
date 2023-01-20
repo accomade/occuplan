@@ -1,6 +1,6 @@
 <script lang="ts">
-  import OccuplanRows from '../lib/components/OccuPlanRows.svelte'
-  import OccuPlanGrid from "../lib/components/OccuPlanGrid.svelte";
+  import OccuplanRows from '../../lib/components/OccuPlanRows.svelte'
+  import OccuPlanGrid from "../../lib/components/OccuPlanGrid.svelte";
   import type { Occupation, OccupationType } from "$lib/types/occupations";
   import { DateTime } from "luxon";
 
