@@ -214,25 +214,25 @@
   /** Occupations */
   export let occupations:Occupation[] = [];
   
-  const occupied = ( d:DateTime ):Occupation|undefined => {
+  const occupied = ( d:DateTime, occupations:Occupation[] ):Occupation|undefined => {
     const startOfDay = d.startOf('day');
     const endOfDay = d.endOf('day')
     return occupations.find( (o) => o.arrival < startOfDay && o.leave > endOfDay)
   }
 
-  const occupationStarts = ( d:DateTime ):Occupation|undefined => {
+  const occupationStarts = ( d:DateTime, occupations:Occupation[] ):Occupation|undefined => {
     const startOfDay = d.startOf('day');
     const endOfDay = d.endOf('day')
     return occupations.find( (o) => o.arrival > startOfDay && o.arrival < endOfDay)
   }
 
-  const occupationEnds = ( d:DateTime ):Occupation|undefined => {
+  const occupationEnds = ( d:DateTime, occupations:Occupation[] ):Occupation|undefined => {
     const startOfDay = d.startOf('day');
     const endOfDay = d.endOf('day')
     return occupations.find( (o) => o.leave > startOfDay && o.leave < endOfDay)
   }
 
-  const occupationStyle = (d:DateTime, m:DateTime):string => {
+  const occupationStyle = (d:DateTime, m:DateTime, occupations:Occupation[]):string => {
     const valid = validDay(d)
     if(!valid) {
       return `
@@ -242,9 +242,9 @@
         `
     }
 
-    const o = occupied(d);
-    const oStarts = occupationStarts(d);
-    const oEnds = occupationEnds(d);
+    const o = occupied(d, occupations);
+    const oStarts = occupationStarts(d, occupations);
+    const oEnds = occupationEnds(d, occupations);
     const otherMonth = d.month !== m.month
    
     if(o) {
@@ -423,7 +423,7 @@
               class="day"
               style="
                 grid-area: w{d.weekNumber} / d{d.weekday} / w{d.weekNumber} / d{d.weekday};
-                {occupationStyle(d, m)}
+                {occupationStyle(d, m, occupations)}
                 "
             >
             {d.day}

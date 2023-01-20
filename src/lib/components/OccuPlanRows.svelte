@@ -10,6 +10,10 @@
     month: MonthNumbers,
     year: number
   }
+  interface DayHelperWithStyle extends DayHelper {
+    style: string
+  }
+
   /** Helpers end */
 
 
@@ -123,16 +127,21 @@
   const monthDays = [...Array(31).keys()].map((i) => i+1);
   $:months = [...Array(numberOfMonth).keys()].map((n) => DateTime.local(year, firstMonth).plus({months: n}));
   
-  let days:DayHelper[];
+  let days:DayHelperWithStyle[];
   $: {
     days = [];
     for(const m of months) {
       for(let d:DayNumbers = 1; d <= 31; d++) {
-        days.push({
+        const day = {
           day: d,
           month: m.month,
           year: m.year,
-        })
+        }
+        let dayWithStyle = {
+          ...day,
+          style: occupationStyle(day, occupations)
+        }
+        days.push(dayWithStyle)
       }
     }
   }
@@ -185,25 +194,25 @@
     return d.day <= m.endOf("month").day
   }
 
-  const occupied = ( d:DateTime ):Occupation|undefined => {
+  const occupied = ( d:DateTime,occupations:Occupation[] ):Occupation|undefined => {
     const startOfDay = d.startOf('day');
     const endOfDay = d.endOf('day')
     return occupations.find( (o) => o.arrival < startOfDay && o.leave > endOfDay)
   }
 
-  const occupationStarts = ( d:DateTime ):Occupation|undefined => {
+  const occupationStarts = ( d:DateTime,occupations:Occupation[] ):Occupation|undefined => {
     const startOfDay = d.startOf('day');
     const endOfDay = d.endOf('day')
     return occupations.find( (o) => o.arrival > startOfDay && o.arrival < endOfDay)
   }
 
-  const occupationEnds = ( d:DateTime ):Occupation|undefined => {
+  const occupationEnds = ( d:DateTime,occupations:Occupation[] ):Occupation|undefined => {
     const startOfDay = d.startOf('day');
     const endOfDay = d.endOf('day')
     return occupations.find( (o) => o.leave > startOfDay && o.leave < endOfDay)
   }
 
-  const occupationStyle = (d:DayHelper):string => {
+  const occupationStyle = (d:DayHelper, occupations:Occupation[]):string => {
     const valid = validDay(d)
     if(!valid) {
       return `
@@ -212,9 +221,9 @@
     }
 
     const day = DateTime.local(d.year, d.month, d.day)
-    const o = occupied(day);
-    const oStarts = occupationStarts(day);
-    const oEnds = occupationEnds(day);
+    const o = occupied(day, occupations);
+    const oStarts = occupationStarts(day, occupations);
+    const oEnds = occupationEnds(day, occupations);
     const isWeekend = [6,7].includes(day.weekday)
     
     if(o) {
@@ -371,7 +380,7 @@
           style="
             outline: {gridBorder};
             grid-area: m{d.month}y{d.year}  / d{d.day} / m{d.month}y{d.year} / d{d.day};
-            {occupationStyle(d)}
+            {occupationStyle(d, occupations)}
             "
         >
         &nbsp;
