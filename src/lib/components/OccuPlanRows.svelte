@@ -259,7 +259,7 @@
 
       if(isWeekend) {
         return `
-          background: linear-gradient(90deg, ${endType.backgroundColor}, ${startType.backgroundColor}), radial-gradient(${backgroundHueWeekend}, ${backgroundColorMain}, ${backgroundColorMain});
+          background: radial-gradient(${backgroundHueWeekend}, ${backgroundColorMain}, ${backgroundColorMain}), linear-gradient(90deg, ${endType.backgroundColor}, ${startType.backgroundColor});
           `
       }      
 
@@ -278,7 +278,7 @@
 
       if(isWeekend) {
         return `
-        background: linear-gradient(90deg, ${backgroundColorMain}, ${t.backgroundColor}), radial-gradient(${backgroundHueWeekend}, ${backgroundColorMain}, ${backgroundColorMain});
+        background: radial-gradient(${backgroundHueWeekend}, ${backgroundColorMain}, ${backgroundColorMain}), linear-gradient(90deg, ${backgroundColorMain}, ${t.backgroundColor});
         `  
       }
 
@@ -297,7 +297,7 @@
 
       if(isWeekend) {
         return `
-        background: linear-gradient(90deg, ${t.backgroundColor}, ${backgroundColorMain}), radial-gradient(${backgroundHueWeekend}, ${backgroundColorMain}, ${backgroundColorMain});
+        background: radial-gradient(${backgroundHueWeekend}, ${backgroundColorMain}, ${backgroundColorMain}), linear-gradient(90deg, ${t.backgroundColor}, ${backgroundColorMain});
         `  
       }
 
