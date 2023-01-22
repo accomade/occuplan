@@ -4,11 +4,11 @@
 
   import { getEvents } from '$lib/helpers/readICS';
   import type { Occupation } from "$lib/types/occupations";
-
+  import type { I18n } from '$lib/types/i18n';
   /**
    * Translations
   */
-  export let translations = {
+  export let translations:I18n = {
     weekdayLabels: {
       1: 'Mo',
       2: 'Di',
