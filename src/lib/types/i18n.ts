@@ -25,10 +25,10 @@ interface MonthLabels {
 
 
 interface I18n {
-  weekendLabel?: string | undefined;
-  weekdayLabels?: WeekdayLabels | undefined;
-  monthLabels?: MonthLabels | undefined;
-  monthHeaderFormatFun?: ((monthLabel: string, year: string) => string) | undefined;
+  weekendLabel?: string;
+  weekdayLabels?: WeekdayLabels;
+  monthLabels?: MonthLabels;
+  monthHeaderFormatFun?: ((monthLabel: string, year: string) => string);
 }
 
-export type { WeekdayLabels, MonthLabels, I18n}
+export type { WeekdayLabels, MonthLabels, I18n }
