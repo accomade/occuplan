@@ -4,6 +4,7 @@
 
   //e.g. https://calendar.google.com/calendar/ical/0512a05fa900ee7118de13a14d5244d3ebe2eba056af845e76996e6b9c4f885c%40group.calendar.google.com/public/basic.ics
   let calUrl = ''
+  let eventsLoading = false;
 
 </script>
 
@@ -19,9 +20,13 @@
   
   <h2>Calendar View</h2>
   <div style="margin-bottom: 2rem;">
+    {#if eventsLoading}
+    Loading Events! Hang tight!
+    {:else}
     Displaying events from: {calUrl}
+    {/if}
   </div>
-  <OccuPlanWrapper {calUrl}/>
+  <OccuPlanWrapper {calUrl} bind:loading={eventsLoading}/>
 </main>
 
 

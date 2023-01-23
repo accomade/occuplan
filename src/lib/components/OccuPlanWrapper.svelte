@@ -85,17 +85,22 @@
   $: encodedCalUrl = encodeURIComponent(calUrl)
   $: url = `https://ical-proxy.onrender.com/ical?url=${encodedCalUrl}`
   
+  export let loading = false;
   let occupations:Occupation[] = []
   const eventsIncomingCallback = ( o:Occupation ) => {
     occupations = [...occupations, o]
+    loading = false;
   }
   
   let err = '';
   $: {
     err = '';
-    if(!!calUrl) getEvents(url, eventsIncomingCallback).catch( (e) => {
-      err = `${e}`;
-    })
+    if(!!calUrl) { 
+      loading = true;
+      getEvents(url, eventsIncomingCallback).catch( (e) => {
+        err = `${e}`;
+      })
+    }
   }
   /*
     use different component based on different media size.
