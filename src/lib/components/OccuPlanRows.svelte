@@ -448,6 +448,8 @@
   .month-label {
     display: flex;
     align-items: center;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
   }
 
   .monthday-header {
