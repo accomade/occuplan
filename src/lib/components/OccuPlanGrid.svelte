@@ -48,7 +48,7 @@
       formatFun = i18n.monthHeaderFormatFun
     }
 
-    return formatFun(monthLabel, `${year}`)
+    return formatFun(monthLabel, `${m.year}`)
   }
 
   const weekdayHeader = ( dayNum:WeekdayNumbers ):string => {
