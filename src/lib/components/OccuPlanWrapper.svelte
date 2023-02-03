@@ -126,6 +126,7 @@ Error occured: {err}. <br>Check calendarURL: {calUrl}
   .calendar-wrapper {
     min-width: 210px;
     max-width: 820px;
+    width: 100%;
   }
   .error {
     font-weight: bolder;
