@@ -70,7 +70,7 @@
           search.forEach( (n) => {
             if(consecutive >= n && av[n] == null) {
               av[n] = firstDate;
-              console.log(n, firstDate);
+              //console.log(n, firstDate);
             }
           })
 
