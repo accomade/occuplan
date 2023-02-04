@@ -11,12 +11,6 @@
   $: encodedCalUrl = encodeURIComponent(calUrl)
   $: url = `https://ical-proxy.onrender.com/ical?url=${encodedCalUrl}`
   
-  export let fromFun = (from:DateTime|null, forDays:number):string => {
-    if(from == null) {
-      return `No availability for ${forDays} days until ${maxFutureDate.toFormat('dd.MM.yyyy')}`
-    }
-    return `Min. ${forDays} days from ${from.toFormat('dd.MM.yyyy')} available`
-  }
   export let loading = false;
   let occupations:Occupation[] = []
   const eventsIncomingCallback = ( o:Occupation ) => {
@@ -117,8 +111,4 @@
 
 </script>
 
-<ul>
-  {#each search as s} 
-  <li>{fromFun( av[s], s)}</li>
-  {/each}
-</ul>
+<slot available={av}></slot>
