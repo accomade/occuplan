@@ -1,6 +1,6 @@
 import type { DateTime } from 'luxon'
 import { DateTime as lx } from 'luxon'
-import type { Occupation, OccupationCallback } from "$lib/types/occupations";
+import type { OccupationCallback } from "$lib/types/occupations";
 
 export const getEvents = async (
     url: string,
