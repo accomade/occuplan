@@ -33,11 +33,14 @@
       12: 'Dez',
     },
     monthHeaderFormatFun: ( monthLabel:string, year:string) => `${monthLabel} / ${year}`,
-    weekendLabel: 'Wochenende'
+    weekendLabel: 'Wochenende',
+    typeNames: {
+      defaultOccupationTypeName: 'Belegt',
+    }
   }
 
   export let defaultOccupationType = {
-    name: 'Belegt',
+    name: 'defaultOccupationTypeName',
     backgroundColor: 'rgb(33, 158, 188)',
     fontColor: 'rgb(2, 48, 71)',
   }

@@ -37,9 +37,12 @@
 
   export let i18n:I18n = {
     monthLabels: defaultMonthLabels,
+    typeNames: {
+      defaultOccupationTypeName: 'Occupied'
+    }
   }
 
-  const monthHeader = ( m:DateTime ) => {
+  $: monthHeader = ( m:DateTime ) => {
     let monthLabel = defaultMonthLabels[m.month];
     if (i18n?.monthLabels) {
       const custMonthLabel = i18n.monthLabels[m.month];
@@ -164,7 +167,7 @@
 
   /** Occupation Types configuration */
   export let defaultOccupationType: OccupationType = {
-    name: 'default',
+    name: 'defaultOccupationTypeName',
     backgroundColor: 'rgb(33, 158, 188)',
     fontColor: 'rgb(2, 48, 71)',
   }
@@ -350,7 +353,7 @@
     grid-template-rows: {monthGridTemplateRows};
     ">
     <div style="
-      grid-area: columnLegend / rowLegend /columnLegend / rowLegend;
+      grid-area: columnLegend / rowLegend / columnLegend / rowLegend;
       background-color: {backgroundColorMain};
       ">&nbsp;</div>
 
@@ -389,7 +392,7 @@
   </main>
   <footer>
     <div class="legend">
-      <label for="weenkend-legend">{i18n.weekendLabel ? i18n.weekendLabel : defaultWeekendLabel}</label>
+      <label for="weekend-legend">{i18n.weekendLabel ? i18n.weekendLabel : defaultWeekendLabel}</label>
       <div 
           id="weekend-legend"
           class="legend-entry-marker"
@@ -400,7 +403,7 @@
         &nbsp;
       </div>
       {#each occupationTypes as t}
-        <label for="occupation-type-{t.name}-legend">{t.name}</label>
+        <label for="occupation-type-{t.name}-legend">{ i18n.typeNames ? i18n.typeNames[t.name] : t.name}</label>
         <div 
             id="occupation-type-{t.name}-legend"
             class="legend-entry-marker"

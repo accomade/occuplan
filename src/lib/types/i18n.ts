@@ -29,6 +29,7 @@ interface I18n {
   weekdayLabels?: WeekdayLabels;
   monthLabels?: MonthLabels;
   monthHeaderFormatFun?: ((monthLabel: string, year: string) => string);
+  typeNames?: { [key:string]:string }
 }
 
 export type { WeekdayLabels, MonthLabels, I18n }

@@ -34,9 +34,12 @@
     weekdayLabels: defaultWeekdayLabels,
     monthLabels: defaultMonthLabels,
     monthHeaderFormatFun: defaultMonthHeaderFormatFun,
+    typeNames: {
+      defaultOccupationTypeName: 'occupied'
+    },
   }
 
-  const monthHeader = ( m:DateTime ) => {
+  $: monthHeader = ( m:DateTime ) => {
     let monthLabel = defaultMonthLabels[m.month];
     if (i18n?.monthLabels) {
       const custMonthLabel = i18n.monthLabels[m.month];
@@ -51,7 +54,7 @@
     return formatFun(monthLabel, `${m.year}`)
   }
 
-  const weekdayHeader = ( dayNum:WeekdayNumbers ):string => {
+  $: weekdayHeader = ( dayNum:WeekdayNumbers ):string => {
     let weekdayLabel = defaultWeekdayLabels[dayNum];
     if (i18n?.weekdayLabels) {
       weekdayLabel = i18n.weekdayLabels[dayNum];
@@ -62,7 +65,7 @@
 
   /** Occupation Types configuration */
   export let defaultOccupationType: OccupationType = {
-    name: 'default',
+    name: 'defaultOccupationTypeName',
     backgroundColor: 'rgb(33, 158, 188)',
     fontColor: 'rgb(2, 48, 71)',
   }
@@ -449,7 +452,7 @@
   <footer>
     <div class="legend">
       {#each occupationTypes as t}
-        <label for="occupation-type-{t.name}-legend">{t.name}</label>
+        <label for="occupation-type-{t.name}-legend">{ i18n.typeNames ? i18n.typeNames[t.name] : t.name}</label>
         <div 
             id="occupation-type-{t.name}-legend"
             class="legend-entry-marker"

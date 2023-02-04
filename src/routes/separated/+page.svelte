@@ -3,6 +3,7 @@
   import OccuPlanGrid from "../../lib/components/OccuPlanGrid.svelte";
   import OccuPlanAvailableInfo from '../../lib/components/OccuPlanAvailableInfo.svelte';
   import type { Occupation, OccupationType } from "$lib/types/occupations";
+  import type { I18n } from '$lib/types/i18n';
   import { DateTime } from "luxon";
 
   let reservationType:OccupationType = {
@@ -45,7 +46,13 @@
     }
     return `Min. ${forDays} days from ${from.toFormat('dd.MM.yyyy')} available`
   }
-      
+  
+  let i18n:I18n = {
+    typeNames: {
+      defaultOccupationTypeName: 'Buchung',
+      reservation: 'Reservierung'
+    }
+  }
 
 </script>
 
@@ -56,12 +63,12 @@
 <main>
   <h2>RowsExample</h2>
   <section>
-    <OccuplanRows {occupations}/>
+    <OccuplanRows {occupations} {i18n}/>
   </section>
 
   <h2>GridExample</h2>
   <section>
-    <OccuPlanGrid {occupations}/>
+    <OccuPlanGrid {occupations} {i18n}/>
   </section>
 
   <h2>Availability Example</h2>
