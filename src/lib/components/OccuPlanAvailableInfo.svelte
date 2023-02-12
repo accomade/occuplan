@@ -3,6 +3,7 @@
   import { getEvents } from '$lib/helpers/readICS';
   import type { Occupation } from "$lib/types/occupations";
   import { DateTime } from 'luxon';
+  import { onMount } from 'svelte';
   
   export let calUrl:string;
   export let search = [3, 7, 14];
@@ -18,10 +19,15 @@
     loading = false;
   }
   
+  let initialLoadDone = false;
+  onMount( () => {
+    initialLoadDone = true;
+  })
+
   let err = '';
   $: {
     err = '';
-    if(!!calUrl) { 
+    if(!!calUrl && initialLoadDone) { 
       loading = true;
       getEvents(url, eventsIncomingCallback).catch( (e) => {
         err = `${e}`;

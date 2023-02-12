@@ -5,6 +5,7 @@
   import { getEvents } from '$lib/helpers/readICS';
   import type { Occupation } from "$lib/types/occupations";
   import type { I18n } from '$lib/types/i18n';
+  import { onMount } from "svelte";
   /**
    * Translations
   */
@@ -95,10 +96,15 @@
     loading = false;
   }
   
+  let initialLoadDone = false;
+  onMount( () => {
+    initialLoadDone = true;
+  })
+
   let err = '';
   $: {
     err = '';
-    if(!!calUrl) { 
+    if(!!calUrl && initialLoadDone) { 
       loading = true;
       getEvents(url, eventsIncomingCallback).catch( (e) => {
         err = `${e}`;
