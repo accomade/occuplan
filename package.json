@@ -2,6 +2,7 @@
 	"name": "occuplan",
 	"version": "0.0.20",
 	"author": "accoma.de - Dirk Porsche",
+	"license": "MIT",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "svelte-kit sync && svelte-package",
@@ -28,8 +29,9 @@
 		"luxon": "^3.3.0",
 		"svelte": "^3.58.0"
 	},
+	"files": ["dist"],
 	"type": "module",
-	"main": "src/lib/index.ts",
+	"svelte": "./dist/index.js",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
