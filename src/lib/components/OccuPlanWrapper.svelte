@@ -64,6 +64,7 @@
     backgroundColorInvalidDays: 'rgba(110,110,110,0.6)',
     buttonStyle: `
       background-color: transparent;
+      padding: 0.2rem;
       border: 1px solid rgb(2, 48, 71);
       border-radius: 0.5rem;
       filter: drop-shadow(0 0 0.2rem rgb(2, 48, 71));

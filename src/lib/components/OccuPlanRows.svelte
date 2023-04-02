@@ -67,6 +67,7 @@
 
   export let buttonStyle = `
     background-color: ${backgroundColorMain};
+    padding: 0.2rem;
     border: 1px solid ${fontColorMain};
     border-radius: 0.5rem;
     filter: drop-shadow(0 0 0.2rem ${fontColorMain});
