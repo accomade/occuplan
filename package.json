@@ -1,6 +1,6 @@
 {
 	"name": "occuplan",
-	"version": "0.0.17",
+	"version": "0.0.18",
 	"author": "accoma.de - Dirk Porsche",
 	"scripts": {
 		"dev": "vite dev",
