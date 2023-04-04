@@ -10,8 +10,8 @@ dependencies:
 
 devDependencies:
   '@playwright/test':
-    specifier: ^1.32.1
-    version: 1.32.1
+    specifier: ^1.32.2
+    version: 1.32.2
   '@sveltejs/adapter-auto':
     specifier: ^2.0.0
     version: 2.0.0(@sveltejs/kit@1.15.0)
@@ -25,8 +25,8 @@ devDependencies:
     specifier: ^0.0.34
     version: 0.0.34
   '@types/luxon':
-    specifier: ^3.2.0
-    version: 3.2.0
+    specifier: ^3.2.2
+    version: 3.2.2
   '@types/node':
     specifier: ^18.15.11
     version: 18.15.11
@@ -283,13 +283,13 @@ packages:
       fastq: 1.15.0
     dev: true
 
-  /@playwright/test@1.32.1:
-    resolution: {integrity: sha512-FTwjCuhlm1qHUGf4hWjfr64UMJD/z0hXYbk+O387Ioe6WdyZQ+0TBDAc6P+pHjx2xCv1VYNgrKbYrNixFWy4Dg==}
+  /@playwright/test@1.32.2:
+    resolution: {integrity: sha512-nhaTSDpEdTTttdkDE8Z6K3icuG1DVRxrl98Qq0Lfc63SS9a2sjc9+x8ezysh7MzCKz6Y+nArml3/mmt+gqRmQQ==}
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
       '@types/node': 18.15.11
-      playwright-core: 1.32.1
+      playwright-core: 1.32.2
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
@@ -390,8 +390,8 @@ packages:
       '@types/node': 18.15.11
     dev: true
 
-  /@types/luxon@3.2.0:
-    resolution: {integrity: sha512-lGmaGFoaXHuOLXFvuju2bfvZRqxAqkHPx9Y9IQdQABrinJJshJwfNCKV+u7rR3kJbiqfTF/NhOkcxxAFrObyaA==}
+  /@types/luxon@3.2.2:
+    resolution: {integrity: sha512-CuF9hIlsxGpJO4EztrW23/q1L9ctQfb5JM9mnLCJhhA8z81K2b4LTVjQYySXWhFV5SMyUsPYH/IcvvXDCKwa2g==}
     dev: true
 
   /@types/node@18.15.11:
@@ -984,8 +984,8 @@ packages:
       pathe: 1.1.0
     dev: true
 
-  /playwright-core@1.32.1:
-    resolution: {integrity: sha512-KZYUQC10mXD2Am1rGlidaalNGYk3LU1vZqqNk0gT4XPty1jOqgup8KDP8l2CUlqoNKhXM5IfGjWgW37xvGllBA==}
+  /playwright-core@1.32.2:
+    resolution: {integrity: sha512-zD7aonO+07kOTthsrCR3YCVnDcqSHIJpdFUtZEMOb6//1Rc7/6mZDRdw+nlzcQiQltOOsiqI3rrSyn/SlyjnJQ==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
@@ -1093,7 +1093,7 @@ packages:
     dependencies:
       '@polka/url': 1.0.0-next.21
       mrmime: 1.0.1
-      totalist: 3.0.0
+      totalist: 3.0.1
     dev: true
 
   /slice-ansi@5.0.0:
@@ -1298,8 +1298,8 @@ packages:
       is-number: 7.0.0
     dev: true
 
-  /totalist@3.0.0:
-    resolution: {integrity: sha512-eM+pCBxXO/njtF7vdFsHuqb+ElbxqtI4r5EAvk6grfAFyJ6IvWlSkfZ5T9ozC6xWw3Fj1fGoSmrl0gUs46JVIw==}
+  /totalist@3.0.1:
+    resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
     engines: {node: '>=6'}
     dev: true
 

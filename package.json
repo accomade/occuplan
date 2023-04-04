@@ -12,12 +12,12 @@
 		"test:unit": "vitest"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.32.1",
+		"@playwright/test": "^1.32.2",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.15.0",
 		"@sveltejs/package": "^2.0.2",
 		"@types/line-reader": "^0.0.34",
-		"@types/luxon": "^3.2.0",
+		"@types/luxon": "^3.2.2",
 		"@types/node": "^18.15.11",
 		"svelte-check": "^3.1.4",
 		"tslib": "^2.5.0",
@@ -35,7 +35,8 @@
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"svelte": "./dist/index.js"
+			"svelte": "./dist/index.js",
+			"default": "./dist/index.js"
 		}
 	}
 }
