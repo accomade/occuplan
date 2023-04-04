@@ -1,6 +1,6 @@
 {
 	"name": "occuplan",
-	"version": "0.0.20",
+	"version": "0.0.22",
 	"author": "accoma.de - Dirk Porsche",
 	"license": "MIT",
 	"scripts": {
@@ -29,7 +29,9 @@
 		"luxon": "^3.3.0",
 		"svelte": "^3.58.0"
 	},
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"type": "module",
 	"svelte": "./dist/index.js",
 	"exports": {
