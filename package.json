@@ -5,6 +5,7 @@
 	"license": "MIT",
 	"scripts": {
 		"dev": "vite dev",
+		"build:demo": "vite build",
 		"build": "vite build && npm run package",
 		"preview": "vite preview",
 		"package": "svelte-kit sync && svelte-package && publint",
@@ -27,6 +28,7 @@
 	"devDependencies": {
 		"@playwright/test": "^1.33.0",
 		"@sveltejs/adapter-auto": "^2.0.1",
+		"@sveltejs/adapter-static": "^2.0.2",
 		"@sveltejs/kit": "^1.15.10",
 		"@sveltejs/package": "^2.0.2",
 		"@types/line-reader": "^0.0.34",
