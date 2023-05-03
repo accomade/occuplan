@@ -1,5 +1,4 @@
 import { SvelteComponentTyped } from "svelte";
-import { type MonthNumbers } from 'luxon';
 import type { Occupation, OccupationType } from '../types/occupations.js';
 import type { I18n, MonthLabels } from '../types/i18n.js';
 declare const __propDef: {
@@ -23,7 +22,7 @@ declare const __propDef: {
         /** Date calculations */ year?: number | undefined;
         maxYear?: number | undefined;
         minYear?: number | undefined;
-        firstMonth?: MonthNumbers | undefined;
+        firstMonth?: number | undefined;
         numberOfMonth?: number | undefined;
         /** Occupation Types configuration */ defaultOccupationType?: OccupationType | undefined;
         /** Occupation Types ... end */ occupations?: Occupation[] | undefined;

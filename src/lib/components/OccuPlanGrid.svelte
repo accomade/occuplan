@@ -519,7 +519,7 @@
 
   .occuplan-wrapper {
     height: 100%;
-    width: calc(100% -0.5rem);
+    width: calc(100% - 0.5rem);
     padding: 0.5rem;
     margin: 0;
     display: flex;

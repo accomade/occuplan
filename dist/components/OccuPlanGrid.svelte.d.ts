@@ -24,7 +24,7 @@ declare const __propDef: {
         /** Date calculations */ year?: number | undefined;
         maxYear?: number | undefined;
         minYear?: number | undefined;
-        firstMonth?: import("luxon").MonthNumbers | undefined;
+        firstMonth?: number | undefined;
         numberOfMonth?: number | undefined;
         /** Occupations */ occupations?: Occupation[] | undefined;
     };
