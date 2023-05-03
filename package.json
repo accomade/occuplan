@@ -19,6 +19,9 @@
 			"svelte": "./dist/index.js"
 		}
 	},
+	"engines": {
+		"node": ">=18 <20"
+	},
 	"files": [
 		"dist"
 	],
