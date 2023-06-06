@@ -40,8 +40,10 @@
   }
 
   $: monthHeader = ( m:DateTime ) => {
+    //@ts-ignore
     let monthLabel = defaultMonthLabels[m.month];
     if (i18n?.monthLabels) {
+      //@ts-ignore
       const custMonthLabel = i18n.monthLabels[m.month];
       if(!!custMonthLabel) monthLabel = custMonthLabel;
     }
