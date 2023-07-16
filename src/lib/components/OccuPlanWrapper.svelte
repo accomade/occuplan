@@ -33,7 +33,7 @@
       11: 'Nov',
       12: 'Dez',
     },
-    monthHeaderFormatFun: ( monthLabel:string, year:string) => `${monthLabel} / ${year}`,
+    monthHeaderFormat: '{{monthLabel}} / {{year}}',
     weekendLabel: 'Wochenende',
     typeNames: {
       defaultOccupationTypeName: 'Belegt',

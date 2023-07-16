@@ -26,7 +26,7 @@ export let translations = {
     11: "Nov",
     12: "Dez"
   },
-  monthHeaderFormatFun: (monthLabel, year) => `${monthLabel} / ${year}`,
+  monthHeaderFormat: '{{monthLabel}} / {{year}}',
   weekendLabel: "Wochenende",
   typeNames: {
     defaultOccupationTypeName: "Belegt"

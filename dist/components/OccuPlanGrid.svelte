@@ -1,4 +1,6 @@
-<script>import { DateTime } from "luxon";
+<script>
+import * as Sqrl from 'squirrelly'
+import { DateTime } from "luxon";
 export const defaultWeekdayLabels = {
   1: "Mo",
   2: "Tu",
@@ -22,31 +24,36 @@ export const defaultMonthLabels = {
   11: "Nov",
   12: "Dec"
 };
-export const defaultMonthHeaderFormatFun = (monthLabel, year2) => `${monthLabel} / ${year2}`;
+export const defaultMonthHeaderFormat = '{{monthLabel}} / {{year}}'
 export let i18n = {
   weekdayLabels: defaultWeekdayLabels,
   monthLabels: defaultMonthLabels,
-  monthHeaderFormatFun: defaultMonthHeaderFormatFun,
+  monthHeaderFormat: defaultMonthHeaderFormat,
   typeNames: {
     defaultOccupationTypeName: "occupied"
   }
 };
-$:
-  monthHeader = (m) => {
+$: monthHeader = (m) => {
     let monthLabel = defaultMonthLabels[m.month];
     if (i18n?.monthLabels) {
       const custMonthLabel = i18n.monthLabels[m.month];
       if (!!custMonthLabel)
         monthLabel = custMonthLabel;
     }
-    let formatFun = defaultMonthHeaderFormatFun;
-    if (i18n.monthHeaderFormatFun) {
-      formatFun = i18n.monthHeaderFormatFun;
+    let format = defaultMonthHeaderFormat;
+    if (i18n.monthHeaderFormat) {
+      format = i18n.monthHeaderFormat;
     }
-    return formatFun(monthLabel, `${m.year}`);
+
+    const formatFun = Sqrl.compile(format, {useWith: true})
+    return formatFun({ 
+      monthLabel, 
+      year: `${m.year}` 
+    }, Sqrl.defaultConfig)
+
+    //return formatFun(monthLabel, `${m.year}`);
   };
-$:
-  weekdayHeader = (dayNum) => {
+$: weekdayHeader = (dayNum) => {
     let weekdayLabel = defaultWeekdayLabels[dayNum];
     if (i18n?.weekdayLabels) {
       weekdayLabel = i18n.weekdayLabels[dayNum];

@@ -2,7 +2,7 @@
   import { DateTime, type DayNumbers, type WeekdayNumbers } from 'luxon';
   import type { Occupation, OccupationType } from '$lib/types/occupations.js';
   import type { WeekdayLabels, MonthLabels, I18n } from '$lib/types/i18n.js';
-  
+  import * as Sqrl from 'squirrelly'
 
   /** I18n ... month and weekday labels */
   export const defaultWeekdayLabels:WeekdayLabels = {
@@ -28,12 +28,14 @@
     11: 'Nov',
     12: 'Dec',
   }
-  export const defaultMonthHeaderFormatFun = ( monthLabel:string, year:string ):string|Promise<string> => `${monthLabel} / ${year}`
+  export const defaultMonthHeaderFormat = '{{monthLabel}} / {{year}}'
+  
+  //( monthLabel:string, year:string ):string|Promise<string> => `${monthLabel} / ${year}`
 
   export let i18n:I18n = {
     weekdayLabels: defaultWeekdayLabels,
     monthLabels: defaultMonthLabels,
-    monthHeaderFormatFun: defaultMonthHeaderFormatFun,
+    monthHeaderFormat: defaultMonthHeaderFormat,
     typeNames: {
       defaultOccupationTypeName: 'occupied'
     },
@@ -48,12 +50,17 @@
       if(!!custMonthLabel) monthLabel = custMonthLabel;
     }
   
-    let formatFun = defaultMonthHeaderFormatFun;
-    if (i18n.monthHeaderFormatFun) {
-      formatFun = i18n.monthHeaderFormatFun
+    let format = defaultMonthHeaderFormat;
+    if (i18n.monthHeaderFormat) {
+      format = i18n.monthHeaderFormat
     }
 
-    return formatFun(monthLabel, `${m.year}`)
+    const formatFun = Sqrl.compile(format, {useWith: true})
+
+    return formatFun({ 
+      monthLabel, 
+      year: `${m.year}` 
+    }, Sqrl.defaultConfig)
   }
 
   $: weekdayHeader = ( dayNum:WeekdayNumbers ):string => {

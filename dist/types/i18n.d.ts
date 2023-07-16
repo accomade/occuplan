@@ -25,7 +25,7 @@ interface I18n {
     weekendLabel?: string;
     weekdayLabels?: WeekdayLabels;
     monthLabels?: MonthLabels;
-    monthHeaderFormatFun?: ((monthLabel: string, year: string) => Promise<string> | string);
+    monthHeaderFormat: string;
     typeNames?: {
         [key: string]: string;
     };
