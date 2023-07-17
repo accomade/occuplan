@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import { DateTime, type DayNumbers, type MonthNumbers, type WeekdayNumbers } from 'luxon';
+  import { DateTime, type DayNumbers, type MonthNumbers } from 'luxon';
   import type { Occupation, OccupationType } from '$lib/types/occupations.js';
   import type { I18n, MonthLabels } from '$lib/types/i18n.js';
   
@@ -37,15 +37,16 @@
 
   export let i18n:I18n = {
     monthLabels: defaultMonthLabels,
+    monthHeaderFormat: '{{monthName}} / {{year}}',
     typeNames: {
       defaultOccupationTypeName: 'Occupied'
     }
   }
 
   $: monthHeader = ( m:DateTime ) => {
-    let monthLabel = defaultMonthLabels[m.month];
+    let monthLabel = defaultMonthLabels[m.month as MonthNumbers];
     if (i18n?.monthLabels) {
-      const custMonthLabel = i18n.monthLabels[m.month];
+      const custMonthLabel = i18n.monthLabels[m.month as MonthNumbers];
       if(!!custMonthLabel) monthLabel = custMonthLabel;
     }
     return monthLabel
@@ -136,9 +137,9 @@
     days = [];
     for(const m of months) {
       for(let d:DayNumbers = 1; d <= 31; d++) {
-        const day = {
+        const day:DayHelper = {
           day: d,
-          month: m.month,
+          month: m.month as MonthNumbers,
           year: m.year,
         }
         let dayWithStyle = {

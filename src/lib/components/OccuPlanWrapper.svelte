@@ -125,7 +125,7 @@ Error occured: {err}. <br>Check calendarURL: {calUrl}
 {/if}
 
 <div class="calendar-wrapper" bind:clientWidth={w}>
-  {#if w > 640}
+  {#if w.valueOf() > 640}
   <OccuPlanRows {headerContent} {footerContent} {occupations} {...style} i18n={translations} {defaultOccupationType}/>
   {:else}
   <OccuPlanGrid {headerContent} {footerContent} {occupations} {...style} i18n={translations} {defaultOccupationType}/>
