@@ -1,4 +1,4 @@
-import { SvelteComponentTyped } from "svelte";
+import { SvelteComponent } from "svelte";
 import type { Occupation, OccupationType } from '../types/occupations.js';
 import type { I18n, MonthLabels } from '../types/i18n.js';
 declare const __propDef: {
@@ -35,7 +35,7 @@ declare const __propDef: {
 export type OccuPlanRowsProps = typeof __propDef.props;
 export type OccuPlanRowsEvents = typeof __propDef.events;
 export type OccuPlanRowsSlots = typeof __propDef.slots;
-export default class OccuPlanRows extends SvelteComponentTyped<OccuPlanRowsProps, OccuPlanRowsEvents, OccuPlanRowsSlots> {
+export default class OccuPlanRows extends SvelteComponent<OccuPlanRowsProps, OccuPlanRowsEvents, OccuPlanRowsSlots> {
     get defaultMonthLabels(): MonthLabels;
     get defaultWeekendLabel(): string;
 }

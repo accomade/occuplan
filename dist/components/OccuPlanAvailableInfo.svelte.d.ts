@@ -1,4 +1,4 @@
-import { SvelteComponentTyped } from "svelte";
+import { SvelteComponent } from "svelte";
 import { DateTime } from 'luxon';
 declare const __propDef: {
     props: {
@@ -21,6 +21,6 @@ declare const __propDef: {
 export type OccuPlanAvailableInfoProps = typeof __propDef.props;
 export type OccuPlanAvailableInfoEvents = typeof __propDef.events;
 export type OccuPlanAvailableInfoSlots = typeof __propDef.slots;
-export default class OccuPlanAvailableInfo extends SvelteComponentTyped<OccuPlanAvailableInfoProps, OccuPlanAvailableInfoEvents, OccuPlanAvailableInfoSlots> {
+export default class OccuPlanAvailableInfo extends SvelteComponent<OccuPlanAvailableInfoProps, OccuPlanAvailableInfoEvents, OccuPlanAvailableInfoSlots> {
 }
 export {};

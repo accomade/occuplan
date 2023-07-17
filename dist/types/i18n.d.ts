@@ -1,26 +1,10 @@
-interface WeekdayLabels {
-    1: string;
-    2: string;
-    3: string;
-    4: string;
-    5: string;
-    6: string;
-    7: string;
-}
-interface MonthLabels {
-    1: string;
-    2: string;
-    3: string;
-    4: string;
-    5: string;
-    6: string;
-    7: string;
-    8: string;
-    9: string;
-    10: string;
-    11: string;
-    12: string;
-}
+import type { MonthNumbers, WeekdayNumbers } from 'luxon';
+type WeekdayLabels = {
+    [key in WeekdayNumbers]: string;
+};
+type MonthLabels = {
+    [key in MonthNumbers]: string;
+};
 interface I18n {
     weekendLabel?: string;
     weekdayLabels?: WeekdayLabels;

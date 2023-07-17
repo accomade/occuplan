@@ -26,7 +26,7 @@ export let translations = {
     11: "Nov",
     12: "Dez"
   },
-  monthHeaderFormat: '{{monthLabel}} / {{year}}',
+  monthHeaderFormat: "{{monthLabel}} / {{year}}",
   weekendLabel: "Wochenende",
   typeNames: {
     defaultOccupationTypeName: "Belegt"
@@ -102,7 +102,7 @@ Error occured: {err}. <br>Check calendarURL: {calUrl}
 {/if}
 
 <div class="calendar-wrapper" bind:clientWidth={w}>
-  {#if w > 640}
+  {#if w && w.valueOf() > 640}
   <OccuPlanRows {headerContent} {footerContent} {occupations} {...style} i18n={translations} {defaultOccupationType}/>
   {:else}
   <OccuPlanGrid {headerContent} {footerContent} {occupations} {...style} i18n={translations} {defaultOccupationType}/>

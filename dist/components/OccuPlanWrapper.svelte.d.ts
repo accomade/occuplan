@@ -1,4 +1,4 @@
-import { SvelteComponentTyped } from "svelte";
+import { SvelteComponent } from "svelte";
 import type { I18n } from '../types/i18n';
 declare const __propDef: {
     props: {
@@ -43,6 +43,6 @@ declare const __propDef: {
 export type OccuPlanWrapperProps = typeof __propDef.props;
 export type OccuPlanWrapperEvents = typeof __propDef.events;
 export type OccuPlanWrapperSlots = typeof __propDef.slots;
-export default class OccuPlanWrapper extends SvelteComponentTyped<OccuPlanWrapperProps, OccuPlanWrapperEvents, OccuPlanWrapperSlots> {
+export default class OccuPlanWrapper extends SvelteComponent<OccuPlanWrapperProps, OccuPlanWrapperEvents, OccuPlanWrapperSlots> {
 }
 export {};

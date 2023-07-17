@@ -16,6 +16,7 @@ export const defaultMonthLabels = {
 export const defaultWeekendLabel = "Weekend";
 export let i18n = {
   monthLabels: defaultMonthLabels,
+  monthHeaderFormat: "{{monthName}} / {{year}}",
   typeNames: {
     defaultOccupationTypeName: "Occupied"
   }

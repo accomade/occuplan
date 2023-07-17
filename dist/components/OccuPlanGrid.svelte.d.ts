@@ -1,11 +1,11 @@
-import { SvelteComponentTyped } from "svelte";
+import { SvelteComponent } from "svelte";
 import type { Occupation, OccupationType } from '../types/occupations.js';
 import type { WeekdayLabels, MonthLabels, I18n } from '../types/i18n.js';
 declare const __propDef: {
     props: {
         /** I18n ... month and weekday labels */ defaultWeekdayLabels?: WeekdayLabels | undefined;
         defaultMonthLabels?: MonthLabels | undefined;
-        defaultMonthHeaderFormatFun?: ((monthLabel: string, year: string) => string | Promise<string>) | undefined;
+        defaultMonthHeaderFormat?: "{{monthLabel}} / {{year}}" | undefined;
         i18n?: I18n | undefined;
         /** Occupation Types configuration */ defaultOccupationType?: OccupationType | undefined;
         /** Styling */ mainBorder?: string | undefined;
@@ -36,9 +36,9 @@ declare const __propDef: {
 export type OccuPlanGridProps = typeof __propDef.props;
 export type OccuPlanGridEvents = typeof __propDef.events;
 export type OccuPlanGridSlots = typeof __propDef.slots;
-export default class OccuPlanGrid extends SvelteComponentTyped<OccuPlanGridProps, OccuPlanGridEvents, OccuPlanGridSlots> {
+export default class OccuPlanGrid extends SvelteComponent<OccuPlanGridProps, OccuPlanGridEvents, OccuPlanGridSlots> {
     get defaultWeekdayLabels(): WeekdayLabels;
     get defaultMonthLabels(): MonthLabels;
-    get defaultMonthHeaderFormatFun(): (monthLabel: string, year: string) => string | Promise<string>;
+    get defaultMonthHeaderFormat(): "{{monthLabel}} / {{year}}";
 }
 export {};
