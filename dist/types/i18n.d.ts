@@ -11,6 +11,7 @@ interface I18n {
     monthLabels?: MonthLabels;
     monthHeaderFormat: string;
     typeNames?: {
+        defaultOccupationTypeName: string;
         [key: string]: string;
     };
 }
