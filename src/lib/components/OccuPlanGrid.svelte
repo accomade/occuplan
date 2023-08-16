@@ -58,7 +58,7 @@
     const formatFun = Sqrl.compile(format, {useWith: true})
 
     return formatFun({ 
-      monthLabel, 
+      month: monthLabel, 
       year: `${m.year}` 
     }, Sqrl.defaultConfig)
   }

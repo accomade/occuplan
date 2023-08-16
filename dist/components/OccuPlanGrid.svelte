@@ -23,7 +23,7 @@ export const defaultMonthLabels = {
   11: "Nov",
   12: "Dec"
 };
-export const defaultMonthHeaderFormat = "{{monthLabel}} / {{year}}";
+export const defaultMonthHeaderFormat = "{{month}} / {{year}}";
 export let i18n = {
   weekdayLabels: defaultWeekdayLabels,
   monthLabels: defaultMonthLabels,
@@ -46,7 +46,7 @@ $:
     }
     const formatFun = Sqrl.compile(format, { useWith: true });
     return formatFun({
-      monthLabel,
+      month: monthLabel,
       year: `${m.year}`
     }, Sqrl.defaultConfig);
   };

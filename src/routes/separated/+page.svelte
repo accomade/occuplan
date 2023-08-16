@@ -51,7 +51,8 @@
     typeNames: {
       defaultOccupationTypeName: 'Buchung',
       reservation: 'Reservierung'
-    }
+    },
+    monthHeaderFormat: "{{month}} of {{year}}"
   }
 
 </script>
