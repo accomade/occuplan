@@ -33,7 +33,7 @@
       11: 'Nov',
       12: 'Dez',
     },
-    monthHeaderFormat: '{{monthLabel}} / {{year}}',
+    monthHeaderFormat: '{{month}} / {{year}}',
     weekendLabel: 'Wochenende',
     typeNames: {
       defaultOccupationTypeName: 'Belegt',

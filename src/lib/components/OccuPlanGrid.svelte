@@ -28,9 +28,7 @@
     11: 'Nov',
     12: 'Dec',
   }
-  export const defaultMonthHeaderFormat = '{{monthLabel}} / {{year}}'
-  
-  //( monthLabel:string, year:string ):string|Promise<string> => `${monthLabel} / ${year}`
+  export const defaultMonthHeaderFormat = '{{month}} / {{year}}'
 
   export let i18n:I18n = {
     weekdayLabels: defaultWeekdayLabels,
