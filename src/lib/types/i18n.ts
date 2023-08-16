@@ -14,7 +14,9 @@ interface I18n {
   weekdayLabels?: WeekdayLabels;
   monthLabels?: MonthLabels;
   monthHeaderFormat: string;
-  typeNames?: { [key:string]:string }
+  typeNames?: { 
+    defaultOccupationTypeName: string
+    [key:string]:string }
 }
 
 export type { WeekdayLabels, MonthLabels, I18n }
