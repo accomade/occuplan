@@ -105,6 +105,8 @@
   let err = '';
   $: {
     err = '';
+    if(!calUrl) loading = false;
+
     if(!!calUrl && initialLoadDone) { 
       loading = true;
       getEvents(url, eventsIncomingCallback).catch( (e) => {
