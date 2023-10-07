@@ -13,7 +13,7 @@ interface I18n {
   weekendLabel?: string;
   weekdayLabels?: WeekdayLabels;
   monthLabels?: MonthLabels;
-  monthHeaderFormat: string;
+  monthHeaderFormat?: string;
   typeNames?: { 
     defaultOccupationTypeName: string
     [key:string]:string }
