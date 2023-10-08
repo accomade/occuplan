@@ -29,8 +29,8 @@ devDependencies:
     specifier: ^2.2.2
     version: 2.2.2(svelte@4.2.1)(typescript@5.2.2)
   '@types/line-reader':
-    specifier: ^0.0.34
-    version: 0.0.34
+    specifier: ^0.0.35
+    version: 0.0.35
   '@types/luxon':
     specifier: ^3.3.2
     version: 3.3.2
@@ -462,8 +462,8 @@ packages:
     resolution: {integrity: sha512-VeiPZ9MMwXjO32/Xu7+OwflfmeoRwkE/qzndw42gGtgJwZopBnzy2gD//NN1+go1mADzkDcqf/KnFRSjTJ8xJA==}
     dev: true
 
-  /@types/line-reader@0.0.34:
-    resolution: {integrity: sha512-r6RzbnrY+IoBgDIO4P6l2a+/ad+YCLe/htv7hp+Oqsqeb7cJbV3keKpg07ZlLlk3ZJz9xozNO8lFOiKRux234Q==}
+  /@types/line-reader@0.0.35:
+    resolution: {integrity: sha512-OpeCvI2O2Y7QreXRZUXvX4RmBC+pByhlZoFXnoXMlZL93OscVtefKOkijxFrqIIg4WNv/0kiHJ3Z5yz73cPovw==}
     dependencies:
       '@types/node': 20.8.3
     dev: true
