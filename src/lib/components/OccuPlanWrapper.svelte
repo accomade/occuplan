@@ -1,6 +1,8 @@
 <script lang="ts">
   import OccuPlanGrid from "./OccuPlanGrid.svelte";
   import OccuPlanRows from "./OccuPlanRows.svelte";
+  import { createEventDispatcher } from 'svelte';
+  const dispatchLoadError = createEventDispatcher<{error: string}>()
 
   import { getEvents } from '$lib/helpers/readICS';
   import type { Occupation } from "$lib/types/occupations";
@@ -110,8 +112,12 @@
     if(!!calUrl && initialLoadDone) { 
       loading = true;
       getEvents(url, eventsIncomingCallback).catch( (e) => {
-        err = `${e}`;
+        err = `${e}`; 
       })
+    }
+    if( !!err ) { 
+      dispatchLoadError('error', err);
+      loading = false;
     }
   }
   /*
