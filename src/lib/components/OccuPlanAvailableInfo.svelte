@@ -1,5 +1,7 @@
 <script lang="ts">
-  
+  import { createEventDispatcher } from 'svelte';
+  const dispatchLoadError = createEventDispatcher<{error: string}>()
+
   import { getEvents } from '$lib/helpers/readICS';
   import type { Occupation } from "$lib/types/occupations";
   import { DateTime } from 'luxon';
@@ -32,6 +34,10 @@
       getEvents(url, eventsIncomingCallback).catch( (e) => {
         err = `${e}`;
       })
+    }
+    if( !!err ) { 
+      dispatchLoadError('error', err);
+      loading = false;
     }
   }
 
