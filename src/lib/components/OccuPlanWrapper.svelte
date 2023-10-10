@@ -2,9 +2,10 @@
   import OccuPlanGrid from "./OccuPlanGrid.svelte";
   import OccuPlanRows from "./OccuPlanRows.svelte";
   import { createEventDispatcher } from 'svelte';
-  const dispatchLoadError = createEventDispatcher<{error: string}>()
+  const dispatchFetchResult = createEventDispatcher<{result: GetEventsResult}>()
 
-  import { getEvents } from '$lib/helpers/readICS';
+  import { getEvents, type GetEventsResult } from '$lib/helpers/readICS';
+  import { debounce } from '$lib/helpers/debounce';
   import type { Occupation } from "$lib/types/occupations";
   import type { I18n } from '$lib/types/i18n';
   import { onMount } from "svelte";
@@ -93,6 +94,8 @@
   $: url = `https://ical-proxy.onrender.com/ical?url=${encodedCalUrl}`
   
   export let loading = false;
+  export let id = crypto.randomUUID()
+
   let occupations:Occupation[] = []
   const eventsIncomingCallback = ( o:Occupation ) => {
     occupations = [...occupations, o]
@@ -102,35 +105,35 @@
   let initialLoadDone = false;
   onMount( () => {
     initialLoadDone = true;
+    
   })
 
-  let err = '';
   $: {
-    err = '';
     if(!calUrl) loading = false;
 
     if(!!calUrl && initialLoadDone) { 
       loading = true;
-      getEvents(url, eventsIncomingCallback).catch( (e) => {
-        err = `${e}`; 
-      })
-    }
-    if( !!err ) { 
-      dispatchLoadError('error', err);
-      loading = false;
+      debounce(id, async ():Promise<boolean> => {
+        const eventsResult = await getEvents(
+          url, eventsIncomingCallback )
+        
+        dispatchFetchResult('result', eventsResult);
+  
+        if(eventsResult.error) {
+          return false;
+        }
+
+        return true
+      }, {initialDelay: 200, debounceDelay: 5000})
     }
   }
+
   /*
     use different component based on different media size.
   */
 	let w:Number;
 	
 </script>
-{#if err}
-<div class="error">
-Error occured: {err}. <br>Check calendarURL: {calUrl}
-</div>
-{/if}
 
 <div class="calendar-wrapper" bind:clientWidth={w}>
   {#if w && w.valueOf() > 640}
@@ -145,9 +148,5 @@ Error occured: {err}. <br>Check calendarURL: {calUrl}
     min-width: 210px;
     max-width: 820px;
     width: 100%;
-  }
-  .error {
-    font-weight: bolder;
-    color: darkred;
   }
 </style>

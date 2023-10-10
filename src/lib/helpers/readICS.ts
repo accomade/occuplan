@@ -2,15 +2,19 @@ import type { DateTime } from 'luxon'
 import { DateTime as lx } from 'luxon'
 import type { OccupationCallback } from "$lib/types/occupations";
 
-export const getEvents = async (
-    url: string,
-    eventCallback: OccupationCallback,
-  ) => {
+export interface GetEventsResult {
+  message: string
+  code: number
+  error: boolean
+}
 
-  const resp = await fetch(url)
+const readIcsFromResponse = async (
+  resp: Response,
+  eventCallback: OccupationCallback,) => {
+
   const text = await resp.text()
-  if(!resp.ok) throw new Error("Not a valid ICS URL")
-  
+  //console.log(text)
+    
   let insideEvent = false;
   let arrival = ""
   let leave = ""
@@ -34,7 +38,43 @@ export const getEvents = async (
         break;
     }
   })
+}
 
+export const getEvents = async (
+  url: string,
+  eventCallback: OccupationCallback,
+):Promise<GetEventsResult> => {
+
+  let result:GetEventsResult = {
+    message: 'undefined',
+    code: 100,
+    error: false,
+  }
+
+  let resp:Response
+  try {
+    resp = await fetch(url)
+    result = {
+      message: resp.statusText,
+      code: resp.status,
+      error: resp.status > 299 ? true : false
+    }
+
+    if( resp.status > 299) return result  
+
+    await readIcsFromResponse(resp, eventCallback)
+  }
+  catch (e) {
+    console.log('Error occured while fetching events from proxy via calUrl:', e)
+
+    return {
+      message: `Fetch threw error: ${e}`,
+      code: 500,
+      error: true
+    }
+  }
+
+  return result
 }
 
 const getDate = (icsLine: string):DateTime => {

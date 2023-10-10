@@ -460,7 +460,7 @@
   <footer>
     <div class="legend">
       {#each occupationTypes as t}
-        <label for="occupation-type-{t.name}-legend">{ i18n.typeNames ? i18n.typeNames[t.name] : t.name}</label>
+        <span>{ i18n.typeNames ? i18n.typeNames[t.name] : t.name}</span>
         <div 
             id="occupation-type-{t.name}-legend"
             class="legend-entry-marker"

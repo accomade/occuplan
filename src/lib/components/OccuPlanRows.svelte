@@ -394,7 +394,7 @@
   </main>
   <footer>
     <div class="legend">
-      <label for="weekend-legend">{i18n.weekendLabel ? i18n.weekendLabel : defaultWeekendLabel}</label>
+      <span>{i18n.weekendLabel ? i18n.weekendLabel : defaultWeekendLabel}</span>
       <div 
           id="weekend-legend"
           class="legend-entry-marker"
@@ -405,7 +405,7 @@
         &nbsp;
       </div>
       {#each occupationTypes as t}
-        <label for="occupation-type-{t.name}-legend">{ i18n.typeNames ? i18n.typeNames[t.name] : t.name}</label>
+        <span>{ i18n.typeNames ? i18n.typeNames[t.name] : t.name}</span>
         <div 
             id="occupation-type-{t.name}-legend"
             class="legend-entry-marker"
