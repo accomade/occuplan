@@ -378,13 +378,13 @@
   <header class="occupation-plan-header">
     <div class="left-header-controls">
       {#if prevYear >= minYear}
-        <button style={buttonStyle} on:click={prevYearClicked}>{prevYear}</button>
+        <button style={buttonStyle} on:click|preventDefault|stopPropagation={prevYearClicked}>{prevYear}</button>
       {/if}
     </div>
     <div class="header-label">{@html headerContent}</div>
     <div class="right-header-controls">
       {#if nextYear <= maxYear}
-        <button style={buttonStyle} on:click={nextYearClicked}>{nextYear}</button>
+        <button style={buttonStyle} on:click|preventDefault|stopPropagation={nextYearClicked}>{nextYear}</button>
       {/if}
     </div>
   </header>
