@@ -30,8 +30,6 @@
       arrival: DateTime.fromISO("2023-04-12T12:00:00"),
       leave: DateTime.fromISO("2023-04-15T12:00:00"),
     }
-
-
   ];
 
   let calUrl = "https://calendar.google.com/calendar/ical/0512a05fa900ee7118de13a14d5244d3ebe2eba056af845e76996e6b9c4f885c%40group.calendar.google.com/public/basic.ics";

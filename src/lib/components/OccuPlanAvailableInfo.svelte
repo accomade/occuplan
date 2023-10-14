@@ -37,12 +37,16 @@
     if(!!calUrl && initialLoadDone) { 
       loading = true;
       debounce(id, async ():Promise<boolean> => {
+
         const eventsResult = await getEvents(
           url, eventsIncomingCallback )
+
+        console.log(JSON.stringify( eventsResult, null, 2 ))
         
         dispatchFetchResult('result', eventsResult);
   
         if(eventsResult.error) {
+          console.log('Error fetching events', eventsResult.error)
           return false;
         }
 

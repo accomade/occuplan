@@ -7,5 +7,8 @@
   <li>
     <a href="/integrated">Dynamic/responsive usage of components</a>
   </li>
+  <li>
+    <a href="/avail">Availability</a>
+  </li>
 </ul>
 
