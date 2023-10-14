@@ -9,48 +9,38 @@
   
   const dispatchFetchResult = createEventDispatcher<{result: GetEventsResult}>()
   
-  export let calUrl:string;
   export let search = [3, 7, 14];
   export let maxFutureDate = DateTime.now().plus({years: 1})
-
+  export let calUrl:string;
 
   $: encodedCalUrl = encodeURIComponent(calUrl)
   $: url = `https://ical-proxy.onrender.com/ical?url=${encodedCalUrl}`
   
-  export let loading = false;
   export let id = crypto.randomUUID();
   
   let occupations:Occupation[] = []
   const eventsIncomingCallback = ( o:Occupation ) => {
     occupations = [...occupations, o]
-    loading = false;
   }
   
-  let initialLoadDone = false;
-  onMount( () => {
-    initialLoadDone = true;
-  })
-
+  
   $: {
-    if(!calUrl) loading = false;
+    if(!calUrl) {
+      dispatchFetchResult('result', {
+        code: 400,
+        message: 'Empty calUrl',
+        error: true
+      });
+    }
 
-    if(!!calUrl && initialLoadDone) { 
-      loading = true;
+    if(!!calUrl) { 
       debounce(id, async ():Promise<boolean> => {
-
         const eventsResult = await getEvents(
           url, eventsIncomingCallback )
 
-        console.log(JSON.stringify( eventsResult, null, 2 ))
-        
+        //console.log(JSON.stringify( eventsResult, null, 2 ))
         dispatchFetchResult('result', eventsResult);
-  
-        if(eventsResult.error) {
-          console.log('Error fetching events', eventsResult.error)
-          return false;
-        }
-
-        return true
+        return !eventsResult.error
       }, {initialDelay: 200, debounceDelay: 5000})
     }
   }

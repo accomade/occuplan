@@ -18,6 +18,11 @@
     return `Min. ${forDays} days from ${from.toFormat('dd.MM.yyyy')} available`
   }
 
+  const resultIncoming = ( e:CustomEvent ) => {
+    console.log( JSON.stringify(e.detail, null, 2))
+    eventsLoading = false;
+  }
+
 </script>
 
 
@@ -32,10 +37,9 @@
       {/if}
     </div>
     <OccuPlanAvailableInfo 
-
+      on:result={resultIncoming}
       {maxFutureDate}
       let:available={av}
-      bind:loading={eventsLoading}
       {search}
       {calUrl}
     >

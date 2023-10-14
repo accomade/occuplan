@@ -42,13 +42,13 @@
     <h2>Calendar View</h2>
     <div style="margin-bottom: 2rem;">
       {#if errorOccured}
-      <p class="error-message">Error: {errorMessage}</p>
+        <p class="error-message">Error: {errorMessage}</p>
       {:else if initial}
-      Initial, enter or paste iCal URL
+        Initial, enter or paste iCal URL
       {:else if eventsLoading}
-      Loading Events! Hang tight!
+        Loading Events! Hang tight!
       {:else}
-      Displaying events from: {calUrl}
+        Displaying events from: {calUrl}
       {/if}
     </div>
     <OccuPlanWrapper on:result={fetchReturned} {calUrl}/>

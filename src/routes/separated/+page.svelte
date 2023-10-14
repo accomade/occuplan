@@ -80,8 +80,8 @@
       {/if}
     </div>
     <OccuPlanAvailableInfo 
+      on:result={ () => eventsLoading = false }
       let:available={av}
-      bind:loading={eventsLoading}
       {search}
       {calUrl}
     >
