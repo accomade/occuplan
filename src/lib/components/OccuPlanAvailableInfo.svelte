@@ -61,55 +61,56 @@
   }
 
   let av:AvailableSpans = {}
-  search.reduce((acc, numberOfDays) => {
-      av[numberOfDays] = null;
-      return acc
-    }
-    , av);
 
   $: {
-    if(occupations.length > 0) {
-
-      let foundFirst = false;
-      let firstDate:DateTime;
-      let consecutive = 0;
-
-      for(const d of days) {
-        if( notOccupied(d, occupations) ){
-          if (!foundFirst) {
-            foundFirst = true;
-            firstDate = d;
-          }
-          consecutive++
-        }
-        else {
-          search.forEach( (n) => {
-            if(consecutive >= n && av[n] == null) {
-              av[n] = firstDate;
-              //console.log(n, firstDate);
-            }
-          })
-
-          //found all?
-          let foundAll = true;
-          search.forEach( (n) => {
-            if(av[n] == null) {
-              foundAll = false
-            }
-          });
-          if (foundAll) {
-            break;
-          }
-
-          consecutive = 0;
-          foundFirst = false;
-        }
+    search.reduce((acc, numberOfDays) => {
+        av[numberOfDays] = null;
+        return acc
       }
+      , av);
+  }
 
-      av = {
-        ...av
+  $: {
+    let foundFirst = false;
+    let firstDate:DateTime;
+    let consecutive = 0;
+
+    for(const d of days) {
+      if( notOccupied(d, occupations) ){
+        if (!foundFirst) {
+          foundFirst = true;
+          firstDate = d;
+        }
+        consecutive++
+      }
+      else {
+        search.forEach( (n) => {
+          if(consecutive >= n && av[n] == null) {
+            av[n] = firstDate;
+            //console.log(n, firstDate);
+          }
+        })
+
+        //found all?
+        let foundAll = true;
+        search.forEach( (n) => {
+          if(av[n] == null) {
+            foundAll = false
+          }
+        });
+        if (foundAll) {
+          break;
+        }
+
+        consecutive = 0;
+        foundFirst = false;
       }
     }
+
+    av = {
+      ...av
+    }
+    
   }
 
   const notOccupied = ( d:DateTime, occupations:Occupation[] ):boolean => {
