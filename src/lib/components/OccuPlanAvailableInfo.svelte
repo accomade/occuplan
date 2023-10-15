@@ -64,7 +64,7 @@
 
   $: {
     search.reduce((acc, numberOfDays) => {
-        av[numberOfDays] = null;
+        av[numberOfDays] = days[0];
         return acc
       }
       , av);
