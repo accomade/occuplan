@@ -8,7 +8,7 @@
   import { debounce } from '$lib/helpers/debounce';
   import type { Occupation } from "$lib/types/occupations";
   import type { I18n } from '$lib/types/i18n';
-  import { onMount } from "svelte";
+  
   /**
    * Translations
   */

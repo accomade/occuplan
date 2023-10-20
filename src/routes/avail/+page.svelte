@@ -52,4 +52,22 @@
     </OccuPlanAvailableInfo>
 
   </section>
+  <h2>Availability Example empty CalUrl</h2>
+  <section>
+    <OccuPlanAvailableInfo 
+      on:result={resultIncoming}
+      {maxFutureDate}
+      let:available={av}
+      {search}
+      calUrl=""
+    >
+      <ul>
+        {#each search as s} 
+        <li>{ fromFun( av[s], s) }</li>
+        {/each}
+      </ul>
+      
+    </OccuPlanAvailableInfo>
+
+  </section>
 </main>

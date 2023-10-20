@@ -3,7 +3,6 @@
   import { getEvents, type GetEventsResult } from '$lib/helpers/readICS';
   import type { Occupation } from "$lib/types/occupations";
   import { DateTime } from 'luxon';
-  import { onMount } from 'svelte';
   
   import { createEventDispatcher } from 'svelte';
   
@@ -12,6 +11,8 @@
   export let search = [3, 7, 14];
   export let maxFutureDate = DateTime.now().plus({years: 1})
   export let calUrl:string;
+
+  export let missingCalUrlMessage = "Missing iCal URL, availability can not be calculated."
 
   $: encodedCalUrl = encodeURIComponent(calUrl)
   $: url = `https://ical-proxy.onrender.com/ical?url=${encodedCalUrl}`
@@ -128,4 +129,16 @@
 
 </script>
 
-<slot available={av}></slot>
+{#if !!calUrl}
+  <slot available={av}></slot>
+{:else}
+  <div class="missing-cal-url">{missingCalUrlMessage}</div>
+{/if}
+
+<style>
+  .missing-cal-url {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: darkred;
+  }
+</style>
