@@ -14,16 +14,12 @@
 
   export let missingCalUrlMessage = "Missing iCal URL, availability can not be calculated."
 
-  $: encodedCalUrl = encodeURIComponent(calUrl)
-  $: url = `https://ical-proxy.onrender.com/ical?url=${encodedCalUrl}`
-  
   export let id = crypto.randomUUID();
   
   let occupations:Occupation[] = []
   const eventsIncomingCallback = ( o:Occupation ) => {
     occupations = [...occupations, o]
   }
-  
   
   $: {
     if(!calUrl) {
@@ -37,7 +33,7 @@
     if(!!calUrl) { 
       debounce(id, async ():Promise<boolean> => {
         const eventsResult = await getEvents(
-          url, eventsIncomingCallback )
+          calUrl, eventsIncomingCallback )
 
         //console.log(JSON.stringify( eventsResult, null, 2 ))
         dispatchFetchResult('result', eventsResult);

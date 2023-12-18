@@ -53,7 +53,12 @@ export const getEvents = async (
 
   let resp:Response
   try {
-    resp = await fetch(url)
+    resp = await fetch(url,{
+      headers: {
+        "Accept": "text/calendar",
+      },
+      //mode: "no-cors"
+    })
     result = {
       message: resp.statusText,
       code: resp.status,

@@ -90,8 +90,8 @@
 
   //e.g. https://calendar.google.com/calendar/ical/0512a05fa900ee7118de13a14d5244d3ebe2eba056af845e76996e6b9c4f885c%40group.calendar.google.com/public/basic.ics
   export let calUrl:string;
-  $: encodedCalUrl = encodeURIComponent(calUrl)
-  $: url = `https://ical-proxy.onrender.com/ical?url=${encodedCalUrl}`
+  //$: encodedCalUrl = encodeURIComponent(calUrl)
+  //$: url = `https://ical-proxy.onrender.com/ical?url=${encodedCalUrl}`
   
   export let id = crypto.randomUUID()
 
@@ -112,7 +112,7 @@
     if(!!calUrl) {
       debounce(id, async ():Promise<boolean> => {
         const eventsResult = await getEvents(
-          url, eventsIncomingCallback )
+          calUrl, eventsIncomingCallback )
         
         dispatchFetchResult('result', eventsResult);
         return !eventsResult.error

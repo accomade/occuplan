@@ -7,8 +7,8 @@
   let calUrl = "https://calendar.google.com/calendar/ical/0512a05fa900ee7118de13a14d5244d3ebe2eba056af845e76996e6b9c4f885c%40group.calendar.google.com/public/basic.ics";
   let eventsLoading = true;
 
-  let search=[ 1, 10, 200 ]
-  let maxFutureDate=DateTime.now().plus({years: 2})
+  let search = [ 1, 10, 200 ]
+  let maxFutureDate = DateTime.now().plus({years: 2})
 
 
   let fromFun = (from:DateTime|null, forDays:number):string => {
