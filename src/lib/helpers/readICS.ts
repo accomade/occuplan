@@ -97,7 +97,7 @@ const getDate = (icsLine: string):DateTime => {
         rawDateTime.second == 0 &&
         rawDateTime.millisecond == 0
       ) {
-        rawDateTime = rawDateTime.minus({hour: 12})
+        rawDateTime = rawDateTime.plus({hour: 12})
       }
   }
 
