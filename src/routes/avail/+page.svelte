@@ -4,7 +4,10 @@
 
   import OccuPlanAvailableInfo from '../../lib/components/OccuPlanAvailableInfo.svelte';
   
-  let calUrl = "https://calendar.google.com/calendar/ical/0512a05fa900ee7118de13a14d5244d3ebe2eba056af845e76996e6b9c4f885c%40group.calendar.google.com/public/basic.ics";
+  let calUrl = "https://accoma.de/ical?user=81e66599-ac3c-4ad6-b261-fceeb784f9e9&acco=83cd06fd-858d-4e21-994f-325778812713" 
+  
+  //"https://calendar.google.com/calendar/ical/0512a05fa900ee7118de13a14d5244d3ebe2eba056af845e76996e6b9c4f885c%40group.calendar.google.com/public/basic.ics";
+  
   let eventsLoading = true;
 
   let search = [ 1, 10, 200 ]
@@ -52,6 +55,7 @@
     </OccuPlanAvailableInfo>
 
   </section>
+  <hr/>
   <h2>Availability Example empty CalUrl</h2>
   <section>
     <OccuPlanAvailableInfo 
@@ -63,11 +67,17 @@
     >
       <ul>
         {#each search as s} 
-        <li>{ fromFun( av[s], s) }</li>
+          <li>{ fromFun( av[s], s) }</li>
         {/each}
       </ul>
-      
     </OccuPlanAvailableInfo>
 
   </section>
 </main>
+
+<style>
+  hr { 
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+  }
+</style>

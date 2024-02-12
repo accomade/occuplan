@@ -88,11 +88,9 @@
       Occuplan is OSS
     </a>`;
 
-  //e.g. https://calendar.google.com/calendar/ical/0512a05fa900ee7118de13a14d5244d3ebe2eba056af845e76996e6b9c4f885c%40group.calendar.google.com/public/basic.ics
+  //https://accoma.de/ical/?user=81e66599-ac3c-4ad6-b261-fceeb784f9e9&acco=83cd06fd-858d-4e21-994f-325778812713
+  //https://popnapdkcdnabruxkjti.supabase.co/storage/v1/object/public/ical/81e66599-ac3c-4ad6-b261-fceeb784f9e9/83cd06fd-858d-4e21-994f-325778812713
   export let calUrl:string;
-  //$: encodedCalUrl = encodeURIComponent(calUrl)
-  //$: url = `https://ical-proxy.onrender.com/ical?url=${encodedCalUrl}`
-  
   export let id = crypto.randomUUID()
 
   let occupations:Occupation[] = []
