@@ -40,6 +40,11 @@
     calcAvailability()
   }
 
+  $: {
+    if(search && search.length > 0) {
+      calcAvailability()
+    }
+  }
 
   let av:AvailableSpans = search.reduce(( acc, num ) => { acc[num] = null; return acc }, {} as AvailableSpans)
   const calcAvailability = () => {

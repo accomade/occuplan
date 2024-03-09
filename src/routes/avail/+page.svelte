@@ -26,6 +26,21 @@
     eventsLoading = false;
   }
 
+  const makeDeleteSearchHandler = (index:number) => {
+    console.log(index)
+    return () => {
+      console.log(index, search)
+      search.splice(index,1)
+      search = search
+      console.log(search)
+    }
+  }
+
+  let newSpan = 1;
+  const addHandler = () => {
+    search = [...search, newSpan]
+  }
+
 </script>
 
 
@@ -55,6 +70,18 @@
     </OccuPlanAvailableInfo>
 
   </section>
+  <hr>
+  <section class="input">
+    <ul>
+      {#each search as currentSearch, i} 
+      <li><span>{currentSearch}</span><button on:click={makeDeleteSearchHandler(i)}>DELETE</button></li>
+      {/each}
+    </ul>
+    <div>
+        <input type="number" bind:value={newSpan} max="100" min="1">
+        <button on:click={addHandler}>Add</button>
+    </div>
+  </section>
   <hr/>
   <h2>Availability Example empty CalUrl</h2>
   <section>
@@ -73,6 +100,7 @@
     </OccuPlanAvailableInfo>
 
   </section>
+  
 </main>
 
 <style>
@@ -80,4 +108,15 @@
     margin-bottom: 2rem;
     margin-top: 2rem;
   }
+
+  .input {
+    width: 15rem;
+  }
+
+  .input li, 
+  .input div {
+    display: flex;
+    justify-content: space-around;
+  }
+
 </style>
