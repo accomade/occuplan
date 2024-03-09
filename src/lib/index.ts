@@ -12,7 +12,7 @@ export {
   OccuPlanRows,
   OccuPlanWrapper,
   OccuPlanAvailableInfo,
-  getEvents as getEventsFromICal,
+  getEvents as getOccupations,
 }
 
 export type { 
