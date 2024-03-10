@@ -18,7 +18,7 @@
   export let occupations:Occupation[]|null = null;
 
   export let missingCalUrlMessage = "Missing iCal URL, availability can not be calculated."
-  export let id = crypto.randomUUID();
+  export let id:string = crypto.randomUUID();
   
   let occupiedDays:Record<string,boolean> = {}
   const eventsIncomingCallback = ( o:Occupation ) => {  
