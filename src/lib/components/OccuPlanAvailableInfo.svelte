@@ -53,6 +53,7 @@
 
   $: {
     if(occupations) {
+      occupiedDays = {}
       occupations.forEach( (o) => {
         updateOccupiedDays(o)
       })
