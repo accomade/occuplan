@@ -1,6 +1,7 @@
 <script lang="ts">
 
   import { DateTime } from "luxon";
+  import type { Occupation } from '$lib';
 
   import OccuPlanAvailableInfo from '../../lib/components/OccuPlanAvailableInfo.svelte';
   
@@ -41,6 +42,33 @@
     search = [...search, newSpan]
   }
 
+  const occupations:Occupation[] = [
+    {
+      arrival: DateTime.utc().plus({days: 1}),
+      leave: DateTime.utc().plus({days: 3}),
+    },
+    {
+      arrival: DateTime.utc().plus({days: 3}),
+      leave: DateTime.utc().plus({days: 8}),
+    },
+    {
+      arrival: DateTime.utc().plus({days: 13}),
+      leave: DateTime.utc().plus({days: 18}),
+    },
+    {
+      arrival: DateTime.utc().plus({days: 18}),
+      leave: DateTime.utc().plus({days: 22}),
+    },
+    {
+      arrival: DateTime.utc().plus({days: 33}),
+      leave: DateTime.utc().plus({days: 40}),
+    },
+    {
+      arrival: DateTime.utc().plus({days: 34}),
+      leave: DateTime.utc().plus({days: 54}),
+    },
+  ]
+
 </script>
 
 
@@ -66,9 +94,7 @@
         <li>{ fromFun( av[s], s) }</li>
         {/each}
       </ul>
-      
     </OccuPlanAvailableInfo>
-
   </section>
   <hr>
   <section class="input">
@@ -81,6 +107,21 @@
         <input type="number" bind:value={newSpan} max="100" min="1">
         <button on:click={addHandler}>Add</button>
     </div>
+  </section>
+  <hr/>
+  <section>
+    <OccuPlanAvailableInfo 
+      {maxFutureDate}
+      let:available={av}
+      {search}
+      {occupations}
+      >
+      <ul>
+        {#each search as s} 
+        <li>{ fromFun( av[s], s) }</li>
+        {/each}
+      </ul>
+    </OccuPlanAvailableInfo>
   </section>
   <hr/>
   <h2>Availability Example empty CalUrl</h2>

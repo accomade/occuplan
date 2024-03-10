@@ -4,7 +4,7 @@
   import type { Occupation } from "$lib/types/occupations";
   import { DateTime } from 'luxon';
   
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
   
   const dispatchFetchResult = createEventDispatcher<{result: GetEventsResult}>()
   
@@ -14,12 +14,19 @@
 
   export let search = [3, 7, 14];
   export let maxFutureDate = DateTime.utc().plus({years: 1}).set({hour: 12, minute: 0, second: 0, millisecond: 0})
-  export let calUrl:string;
+  export let calUrl:string|null = null;
+  export let occupations:Occupation[]|null = null;
+
   export let missingCalUrlMessage = "Missing iCal URL, availability can not be calculated."
   export let id = crypto.randomUUID();
   
   let occupiedDays:Record<string,boolean> = {}
   const eventsIncomingCallback = ( o:Occupation ) => {  
+    updateOccupiedDays(o)
+    calcAvailability()
+  }
+
+  const updateOccupiedDays = (o:Occupation) => {
     let startDate = o.arrival;
     let endDate = o.leave;
 
@@ -36,12 +43,19 @@
       occupiedDays = occupiedDays;
       cDate = cDate.plus({days: 1})
     }
-
-    calcAvailability()
+  }
+ 
+  $: {
+    if(search && search.length > 0) {
+      calcAvailability()
+    }
   }
 
   $: {
-    if(search && search.length > 0) {
+    if(occupations) {
+      occupations.forEach( (o) => {
+        updateOccupiedDays(o)
+      })
       calcAvailability()
     }
   }
@@ -88,22 +102,17 @@
   }
   
   $: {
-    if(!calUrl) {
-      dispatchFetchResult('result', {
-        code: 400,
-        message: 'Empty calUrl',
-        error: true
-      });
-    }
-
     if(!!calUrl) { 
       debounce(id, async ():Promise<boolean> => {
-        const eventsResult = await getEvents(
-          calUrl, eventsIncomingCallback )
+        if(!!calUrl) {
+          const eventsResult = await getEvents(
+            calUrl, eventsIncomingCallback )
 
-        //console.log(JSON.stringify( eventsResult, null, 2 ))
-        dispatchFetchResult('result', eventsResult);
-        return !eventsResult.error
+          //console.log(JSON.stringify( eventsResult, null, 2 ))
+          dispatchFetchResult('result', eventsResult);
+          return !eventsResult.error
+        };
+        return false
       }, {initialDelay: 200, debounceDelay: 5000})
     }
   }
@@ -121,10 +130,19 @@
     days = [...days]
   }
 
+  onMount( () => {
+    if(occupations) {
+      occupations.forEach( (o) => {
+        updateOccupiedDays(o)
+      })
+      calcAvailability()
+    }
+  })
+
 
 </script>
 
-{#if !!calUrl}
+{#if !!calUrl || occupations }
   <slot available={av}></slot>
 {:else}
   <div class="missing-cal-url">{missingCalUrlMessage}</div>
