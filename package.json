@@ -20,39 +20,36 @@
 		}
 	},
 	"engines": {
-		"node": ">=18 <24"
+		"node": ">=18"
 	},
 	"files": [
 		"dist",
 		"!dist/**/*.test.*",
 		"!dist/**/*.spec.*"
 	],
-	"peerDependencies": {
-		"svelte": "^4.2.1"
-	},
 	"devDependencies": {
-		"@playwright/test": "^1.45.1",
-		"@sveltejs/adapter-auto": "^3.2.2",
-		"@sveltejs/adapter-static": "^3.0.2",
-		"@sveltejs/kit": "^2.5.18",
-		"@sveltejs/package": "^2.3.2",
-		"@sveltejs/vite-plugin-svelte": "^3.1.1",
+		"@playwright/test": "^1.46.1",
+		"@sveltejs/adapter-auto": "^3.2.4",
+		"@sveltejs/adapter-static": "^3.0.4",
+		"@sveltejs/kit": "^2.5.25",
+		"@sveltejs/package": "^2.3.4",
+		"@sveltejs/vite-plugin-svelte": "^3.1.2",
 		"@types/line-reader": "^0.0.37",
 		"@types/luxon": "^3.4.2",
-		"@types/node": "^20.14.10",
-		"publint": "^0.2.8",
-		"svelte": "5.0.0-next.182",
-		"svelte-check": "^3.8.4",
-		"tslib": "^2.6.3",
-		"typescript": "^5.5.3",
-		"vite": "^5.3.3",
+		"@types/node": "^20.16.2",
+		"publint": "^0.2.10",
+		"svelte": "5.0.0-next.240",
+		"svelte-check": "^3.8.6",
+		"tslib": "^2.7.0",
+		"typescript": "^5.5.4",
+		"vite": "^5.4.2",
 		"vitest": "^1.6.0"
 	},
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"type": "module",
 	"dependencies": {
-		"luxon": "^3.4.4",
+		"luxon": "^3.5.0",
 		"squirrelly": "^9.1.0"
 	}
 }
