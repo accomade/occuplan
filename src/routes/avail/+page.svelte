@@ -23,17 +23,17 @@
   }
 
   const resultIncoming = ( e:CustomEvent ) => {
-    console.log( JSON.stringify(e.detail, null, 2))
+    //console.log( JSON.stringify(e.detail, null, 2))
     eventsLoading = false;
   }
 
   const makeDeleteSearchHandler = (index:number) => {
-    console.log(index)
+    //console.log(index)
     return () => {
-      console.log(index, search)
+      //console.log(index, search)
       search.splice(index,1)
       search = search
-      console.log(search)
+      //console.log(search)
     }
   }
 

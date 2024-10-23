@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { I18n } from '$lib';
   import OccuPlanWrapper from '$lib/components/OccuPlanWrapper.svelte';
 
 
@@ -18,15 +19,18 @@
   let errorMessage = ''
   let errorOccured = false;
   const fetchReturned = ( e:CustomEvent ) => {
-    console.log(e)
+    //console.log(e)
 
     eventsLoading = false;
     errorOccured = e.detail.error;
     errorMessage = e.detail.message;
   }
 
-  
-
+  const translations: I18n = {
+    typeNames: { 
+      defaultOccupationTypeName: "Belegung"
+    }
+  };
 </script>
 
 <h1>Welcome to your library project</h1>
@@ -51,7 +55,7 @@
         Displaying events from: {calUrl}
       {/if}
     </div>
-    <OccuPlanWrapper on:result={fetchReturned} {calUrl}/>
+    <OccuPlanWrapper on:result={fetchReturned} {calUrl} {translations}/>
   </form>
 </main>
 

@@ -42,7 +42,7 @@
       defaultOccupationTypeName: 'Occupied'
     }
   }
-
+ 
   $: monthHeader = ( m:DateTime ) => {
     let monthLabel = defaultMonthLabels[m.month as MonthNumbers];
     if (i18n?.monthLabels) {
