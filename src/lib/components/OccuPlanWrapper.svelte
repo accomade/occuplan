@@ -44,7 +44,7 @@
   }
 
   export let defaultOccupationType = {
-    name: 'defaultOccupationTypeName',
+    name: translations?.typeNames?.defaultOccupationTypeName ?? "Occupied",
     backgroundColor: 'rgb(33, 158, 188)',
     fontColor: 'rgb(2, 48, 71)',
   }
