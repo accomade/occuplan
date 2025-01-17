@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { debounce } from '$lib/helpers/debounce';
   import { getEvents, type GetEventsResult } from '$lib/helpers/readICS';
   import type { Occupation } from "$lib/types/occupations";
@@ -12,15 +14,28 @@
     [key:number]: DateTime | null;
   }
 
-  export let search = [3, 7, 14];
-  export let maxFutureDate = DateTime.utc().plus({years: 1}).set({hour: 12, minute: 0, second: 0, millisecond: 0})
-  export let calUrl:string|null = null;
-  export let occupations:Occupation[]|null = null;
 
-  export let missingCalUrlMessage = "Missing iCal URL, availability can not be calculated."
-  export let id:string = crypto.randomUUID();
+  interface Props {
+    search?: any;
+    maxFutureDate?: any;
+    calUrl?: string|null;
+    occupations?: Occupation[]|null;
+    missingCalUrlMessage?: string;
+    id?: string;
+    children?: import('svelte').Snippet<[any]>;
+  }
+
+  let {
+    search = [3, 7, 14],
+    maxFutureDate = DateTime.utc().plus({years: 1}).set({hour: 12, minute: 0, second: 0, millisecond: 0}),
+    calUrl = null,
+    occupations = null,
+    missingCalUrlMessage = "Missing iCal URL, availability can not be calculated.",
+    id = crypto.randomUUID(),
+    children
+  }: Props = $props();
   
-  let occupiedDays:Record<string,boolean> = {}
+  let occupiedDays:Record<string,boolean> = $state({})
   const eventsIncomingCallback = ( o:Occupation ) => {  
     updateOccupiedDays(o)
     calcAvailability()
@@ -45,23 +60,9 @@
     }
   }
  
-  $: {
-    if(search && search.length > 0) {
-      calcAvailability()
-    }
-  }
 
-  $: {
-    if(occupations) {
-      occupiedDays = {}
-      occupations.forEach( (o) => {
-        updateOccupiedDays(o)
-      })
-      calcAvailability()
-    }
-  }
 
-  let av:AvailableSpans = search.reduce(( acc, num ) => { acc[num] = null; return acc }, {} as AvailableSpans)
+  let av:AvailableSpans = $state(search.reduce(( acc, num ) => { acc[num] = null; return acc }, {} as AvailableSpans))
   const calcAvailability = () => {
     av = search.reduce(( acc, num ) => { acc[num] = null; return acc }, {} as AvailableSpans)
 
@@ -102,7 +103,34 @@
     }
   }
   
-  $: {
+
+  let days:DateTime[] = $state([]);
+
+  onMount( () => {
+    if(occupations) {
+      occupations.forEach( (o) => {
+        updateOccupiedDays(o)
+      })
+      calcAvailability()
+    }
+  })
+
+
+  run(() => {
+    if(search && search.length > 0) {
+      calcAvailability()
+    }
+  });
+  run(() => {
+    if(occupations) {
+      occupiedDays = {}
+      occupations.forEach( (o) => {
+        updateOccupiedDays(o)
+      })
+      calcAvailability()
+    }
+  });
+  run(() => {
     if(!!calUrl) { 
       debounce(id, async ():Promise<boolean> => {
         if(!!calUrl) {
@@ -116,10 +144,8 @@
         return false
       }, {initialDelay: 200, debounceDelay: 5000})
     }
-  }
-
-  let days:DateTime[] = [];
-  $: {
+  });
+  run(() => {
     let firstDay = DateTime.utc().set({hour: 12, minute: 0, second: 0, millisecond: 0})
     
     let n = firstDay
@@ -129,22 +155,11 @@
     }
 
     days = [...days]
-  }
-
-  onMount( () => {
-    if(occupations) {
-      occupations.forEach( (o) => {
-        updateOccupiedDays(o)
-      })
-      calcAvailability()
-    }
-  })
-
-
+  });
 </script>
 
 {#if !!calUrl || occupations }
-  <slot available={av}></slot>
+  {@render children?.({ available: av, })}
 {:else}
   <div class="missing-cal-url">{missingCalUrlMessage}</div>
 {/if}

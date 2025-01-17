@@ -1,23 +1,25 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
     import type { I18n } from '$lib';
   import OccuPlanWrapper from '$lib/components/OccuPlanWrapper.svelte';
 
 
   //e.g. https://calendar.google.com/calendar/ical/0512a05fa900ee7118de13a14d5244d3ebe2eba056af845e76996e6b9c4f885c%40group.calendar.google.com/public/basic.ics
   
-  let calUrl = ''
-  let eventsLoading = false;
-  let initial = true
+  let calUrl = $state('')
+  let eventsLoading = $state(false);
+  let initial = $state(true)
 
-  $: {
+  run(() => {
     if( !!calUrl ) {
       eventsLoading = true
       initial = false
     }
-  }
+  });
 
-  let errorMessage = ''
-  let errorOccured = false;
+  let errorMessage = $state('')
+  let errorOccured = $state(false);
   const fetchReturned = ( e:CustomEvent ) => {
     //console.log(e)
 

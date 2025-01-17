@@ -33,7 +33,7 @@
   ];
 
   let calUrl = "https://calendar.google.com/calendar/ical/0512a05fa900ee7118de13a14d5244d3ebe2eba056af845e76996e6b9c4f885c%40group.calendar.google.com/public/basic.ics";
-  let eventsLoading = true;
+  let eventsLoading = $state(true);
 
   let search=[1,10,200]
   let maxFutureDate=DateTime.now().plus({years: 2})
@@ -81,17 +81,19 @@
     </div>
     <OccuPlanAvailableInfo 
       on:result={ () => eventsLoading = false }
-      let:available={av}
+      
       {search}
       {calUrl}
     >
-      <ul>
-        {#each search as s} 
-        <li>{fromFun( av[s], s)}</li>
-        {/each}
-      </ul>
-      
-    </OccuPlanAvailableInfo>
+      {#snippet children({ available: av })}
+            <ul>
+          {#each search as s} 
+          <li>{fromFun( av[s], s)}</li>
+          {/each}
+        </ul>
+        
+                {/snippet}
+        </OccuPlanAvailableInfo>
 
   </section>
 </main>
