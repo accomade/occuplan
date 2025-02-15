@@ -9,9 +9,9 @@
   
   //"https://calendar.google.com/calendar/ical/0512a05fa900ee7118de13a14d5244d3ebe2eba056af845e76996e6b9c4f885c%40group.calendar.google.com/public/basic.ics";
   
-  let eventsLoading = $state(true);
+  let eventsLoading = true;
 
-  let search = $state([ 1, 10, 200 ])
+  let search = [ 1, 10, 200 ]
   let maxFutureDate = DateTime.now().plus({years: 2})
 
 
@@ -37,7 +37,7 @@
     }
   }
 
-  let newSpan = $state(1);
+  let newSpan = 1;
   const addHandler = () => {
     search = [...search, newSpan]
   }
@@ -85,47 +85,43 @@
     <OccuPlanAvailableInfo 
       on:result={resultIncoming}
       {maxFutureDate}
-      
+      let:available={av}
       {search}
       {calUrl}
     >
-      {#snippet children({ available: av })}
-            <ul>
-          {#each search as s} 
-          <li>{ fromFun( av[s], s) }</li>
-          {/each}
-        </ul>
-                {/snippet}
-        </OccuPlanAvailableInfo>
+      <ul>
+        {#each search as s} 
+        <li>{ fromFun( av[s], s) }</li>
+        {/each}
+      </ul>
+    </OccuPlanAvailableInfo>
   </section>
   <hr>
   <section class="input">
     <ul>
       {#each search as currentSearch, i} 
-      <li><span>{currentSearch}</span><button onclick={makeDeleteSearchHandler(i)}>DELETE</button></li>
+      <li><span>{currentSearch}</span><button on:click={makeDeleteSearchHandler(i)}>DELETE</button></li>
       {/each}
     </ul>
     <div>
         <input type="number" bind:value={newSpan} max="100" min="1">
-        <button onclick={addHandler}>Add</button>
+        <button on:click={addHandler}>Add</button>
     </div>
   </section>
   <hr/>
   <section>
     <OccuPlanAvailableInfo 
       {maxFutureDate}
-      
+      let:available={av}
       {search}
       {occupations}
       >
-      {#snippet children({ available: av })}
-            <ul>
-          {#each search as s} 
-          <li>{ fromFun( av[s], s) }</li>
-          {/each}
-        </ul>
-                {/snippet}
-        </OccuPlanAvailableInfo>
+      <ul>
+        {#each search as s} 
+        <li>{ fromFun( av[s], s) }</li>
+        {/each}
+      </ul>
+    </OccuPlanAvailableInfo>
   </section>
   <hr/>
   <h2>Availability Example empty CalUrl</h2>
@@ -133,18 +129,16 @@
     <OccuPlanAvailableInfo 
       on:result={resultIncoming}
       {maxFutureDate}
-      
+      let:available={av}
       {search}
       calUrl=""
     >
-      {#snippet children({ available: av })}
-            <ul>
-          {#each search as s} 
-            <li>{ fromFun( av[s], s) }</li>
-          {/each}
-        </ul>
-                {/snippet}
-        </OccuPlanAvailableInfo>
+      <ul>
+        {#each search as s} 
+          <li>{ fromFun( av[s], s) }</li>
+        {/each}
+      </ul>
+    </OccuPlanAvailableInfo>
 
   </section>
   

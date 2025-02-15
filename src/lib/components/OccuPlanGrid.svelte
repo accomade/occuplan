@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { run, preventDefault, stopPropagation } from 'svelte/legacy';
-
   import { DateTime, type DayNumbers, type WeekdayNumbers } from 'luxon';
   import type { Occupation, OccupationType } from '$lib/types/occupations.js';
   import type { WeekdayLabels, MonthLabels, I18n } from '$lib/types/i18n.js';
@@ -32,13 +30,54 @@
   }
   export const defaultMonthHeaderFormat = '{{month}} / {{year}}'
 
+  export let i18n:I18n = {
+    weekdayLabels: defaultWeekdayLabels,
+    monthLabels: defaultMonthLabels,
+    monthHeaderFormat: defaultMonthHeaderFormat,
+    typeNames: {
+      defaultOccupationTypeName: 'occupied'
+    },
+  }
 
- 
+  $: monthHeader = ( m:DateTime ) => {
+    //@ts-ignore
+    let monthLabel = defaultMonthLabels[m.month];
+    if (i18n?.monthLabels) {
+      //@ts-ignore
+      const custMonthLabel = i18n.monthLabels[m.month];
+      if(!!custMonthLabel) monthLabel = custMonthLabel;
+    }
+  
+    let format = defaultMonthHeaderFormat;
+    if (i18n.monthHeaderFormat) {
+      format = i18n.monthHeaderFormat
+    }
+
+    const formatFun = Sqrl.compile(format, {useWith: true})
+
+    return formatFun({ 
+      month: monthLabel, 
+      year: `${m.year}` 
+    }, Sqrl.defaultConfig)
+  }
+
+  $: weekdayHeader = ( dayNum:WeekdayNumbers ):string => {
+    let weekdayLabel = defaultWeekdayLabels[dayNum];
+    if (i18n?.weekdayLabels) {
+      weekdayLabel = i18n.weekdayLabels[dayNum];
+    }
+    return weekdayLabel;
+  } 
   /** I18n ... end */
 
-  
+  /** Occupation Types configuration */
+  export let defaultOccupationType: OccupationType = {
+    name: 'defaultOccupationTypeName',
+    backgroundColor: 'rgb(33, 158, 188)',
+    fontColor: 'rgb(2, 48, 71)',
+  }
 
-  let occupationTypes:OccupationType[] = $state([ defaultOccupationType ])
+  let occupationTypes:OccupationType[] = [ defaultOccupationType ]
   
   const addType = (t:OccupationType) => {
 
@@ -51,23 +90,67 @@
   /** Occupation Types ... end */
 
 
+  /** Styling */
+  export let mainBorder = '1px solid rgb(2, 48, 71)';
+  export let gridBorder = '0.2px solid rgba(2, 48, 71, 0.2)';
+  export let fontColorMain = 'rgb(2, 48, 71)';
+  export let fontColorDays = 'rgb(2, 48, 71)';
+  export let fontColorDayHeaders = 'rgb(2, 48, 71)';//'rgb(251, 133, 0)';
+  export let fontColorWeekNum = 'rgba(2, 48, 71, 0.5)';
+  export let backgroundColorDayHeaders = 'rgb(142, 202, 230)'//'rgb(33, 158, 188)';
+  export let backgroundColorWeeknum = 'transparent';//'rgb(142, 202, 230)';
+  export let backgroundColorMain = 'transparent';//'rgb(142, 202, 230)';
+  export let backgroundColorInvalidDays = 'rgba(110,110,110,0.6)';
   
-  
+  export let buttonStyle = `
+    background-color: ${backgroundColorMain};
+    padding: 0.2rem;
+    border: 1px solid ${fontColorMain};
+    border-radius: 0.5rem;
+    filter: drop-shadow(0 0 0.2rem ${fontColorMain});
+  `
   /** Styling end */
 
 
-  
+  /** Hedear & Footer */
+  export let headerContent = 'occupation plan';
+  export let footerContent = `
+    <a 
+        style="color: ${fontColorMain}; filter: opacity(0.3);"
+        href="https://github.com/accomade/occuplan" 
+        target="_blank">
+      Occuplan is OSS
+    </a>`;
   /** Header & Footer end*/
   
 
-  
+  /** Date calculations */
+  export let year = DateTime.now().year
+  export let maxYear = DateTime.local(year).plus({years: 2}).year
+  export let minYear = year;
 
+  export let firstMonth = DateTime.now().month
 
   // 1 => Monday; always Monday. Don't overcomplicate things
+  //export let firstDayOfWeek = 1;
+  export let numberOfMonth = 12;
   
+  $: prevYear = DateTime.local(year).minus({years: 1}).year;
+  $: nextYear = DateTime.local(year).plus({years: 1}).year;
   
-  
-  let months:DateTime[] = $state([]);
+  let months:DateTime[] = [];
+  $: {
+    
+    
+    let fMonth = DateTime.utc(year, firstMonth, 1)
+    months = [fMonth];
+    
+    let nMonth = fMonth.plus({months: 1})
+    for (let c = 1; c < numberOfMonth; c++) {
+      months.push(nMonth);
+      nMonth = nMonth.plus({months: 1})
+    }
+  }
 
 
   const nextYearClicked = () => {
@@ -139,83 +222,8 @@
   /** Date calculations end */
 
 
-  
-  interface Props {
-    i18n?: I18n;
-    /** Occupation Types configuration */
-    defaultOccupationType?: OccupationType;
-    Styling
-    mainBorder?: string;
-    gridBorder?: string;
-    fontColorMain?: string;
-    fontColorDays?: string;
-    fontColorDayHeaders?: string;
-    fontColorWeekNum?: string;
-    backgroundColorDayHeaders?: string;
-    backgroundColorWeeknum?: string;
-    backgroundColorMain?: string;
-    backgroundColorInvalidDays?: string;
-    buttonStyle?: any;
-    Hedear & Footer
-    headerContent?: string;
-    footerContent?: any;
-    Date calculations
-    year?: any;
-    maxYear?: any;
-    minYear?: any;
-    firstMonth?: any;
-    export let firstDayOfWeek = 1;
-    numberOfMonth?: number;
-    /** Occupations */
-    occupations?: Occupation[];
-  }
-
-  let {
-    i18n = {
-    weekdayLabels: defaultWeekdayLabels,
-    monthLabels: defaultMonthLabels,
-    monthHeaderFormat: defaultMonthHeaderFormat,
-    typeNames: {
-      defaultOccupationTypeName: 'occupied'
-    },
-  },
-    defaultOccupationType = {
-    name: 'defaultOccupationTypeName',
-    backgroundColor: 'rgb(33, 158, 188)',
-    fontColor: 'rgb(2, 48, 71)',
-  },
-    mainBorder = '1px solid rgb(2, 48, 71)',
-    gridBorder = '0.2px solid rgba(2, 48, 71, 0.2)',
-    fontColorMain = 'rgb(2, 48, 71)',
-    fontColorDays = 'rgb(2, 48, 71)',
-    fontColorDayHeaders = 'rgb(2, 48, 71)',
-    fontColorWeekNum = 'rgba(2, 48, 71, 0.5)',
-    backgroundColorDayHeaders = 'rgb(142, 202, 230)',
-    backgroundColorWeeknum = 'transparent',
-    backgroundColorMain = 'transparent',
-    backgroundColorInvalidDays = 'rgba(110,110,110,0.6)',
-    buttonStyle = `
-    background-color: ${backgroundColorMain};
-    padding: 0.2rem;
-    border: 1px solid ${fontColorMain};
-    border-radius: 0.5rem;
-    filter: drop-shadow(0 0 0.2rem ${fontColorMain});
-  `,
-    headerContent = 'occupation plan',
-    footerContent = `
-    <a 
-        style="color: ${fontColorMain}; filter: opacity(0.3);"
-        href="https://github.com/accomade/occuplan" 
-        target="_blank">
-      Occuplan is OSS
-    </a>`,
-    year = $bindable(DateTime.now().year),
-    maxYear = DateTime.local(year).plus({years: 2}).year,
-    minYear = year,
-    firstMonth = DateTime.now().month,
-    numberOfMonth = 12,
-    occupations = []
-  }: Props = $props();
+  /** Occupations */
+  export let occupations:Occupation[] = [];
   
   const occupied = ( d:DateTime, occupations:Occupation[] ):Occupation|undefined => {
     const startOfDay = d.startOf('day');
@@ -357,54 +365,6 @@
 
   /** occupations end */
 
-  let monthHeader = $derived(( m:DateTime ) => {
-    //@ts-ignore
-    let monthLabel = defaultMonthLabels[m.month];
-    if (i18n?.monthLabels) {
-      //@ts-ignore
-      const custMonthLabel = i18n.monthLabels[m.month];
-      if(!!custMonthLabel) monthLabel = custMonthLabel;
-    }
-  
-    let format = defaultMonthHeaderFormat;
-    if (i18n.monthHeaderFormat) {
-      format = i18n.monthHeaderFormat
-    }
-
-    const formatFun = Sqrl.compile(format, {useWith: true})
-
-    return formatFun({ 
-      month: monthLabel, 
-      year: `${m.year}` 
-    }, Sqrl.defaultConfig)
-  })
-  let weekdayHeader = $derived(( dayNum:WeekdayNumbers ):string => {
-    let weekdayLabel = defaultWeekdayLabels[dayNum];
-    if (i18n?.weekdayLabels) {
-      weekdayLabel = i18n.weekdayLabels[dayNum];
-    }
-    return weekdayLabel;
-  })
-  let prevYear;
-  run(() => {
-    prevYear = DateTime.local(year).minus({years: 1}).year;
-  });
-  let nextYear;
-  run(() => {
-    nextYear = DateTime.local(year).plus({years: 1}).year;
-  });
-  run(() => {
-    
-    
-    let fMonth = DateTime.utc(year, firstMonth, 1)
-    months = [fMonth];
-    
-    let nMonth = fMonth.plus({months: 1})
-    for (let c = 1; c < numberOfMonth; c++) {
-      months.push(nMonth);
-      nMonth = nMonth.plus({months: 1})
-    }
-  });
 </script>
 
 
@@ -418,13 +378,13 @@
   <header class="occupation-plan-header">
     <div class="left-header-controls">
       {#if prevYear >= minYear}
-        <button style={buttonStyle} onclick={stopPropagation(preventDefault(prevYearClicked))}>{prevYear}</button>
+        <button style={buttonStyle} on:click|preventDefault|stopPropagation={prevYearClicked}>{prevYear}</button>
       {/if}
     </div>
     <div class="header-label">{@html headerContent}</div>
     <div class="right-header-controls">
       {#if nextYear <= maxYear}
-        <button style={buttonStyle} onclick={stopPropagation(preventDefault(nextYearClicked))}>{nextYear}</button>
+        <button style={buttonStyle} on:click|preventDefault|stopPropagation={nextYearClicked}>{nextYear}</button>
       {/if}
     </div>
   </header>

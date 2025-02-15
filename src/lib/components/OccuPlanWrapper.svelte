@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
   import OccuPlanGrid from "./OccuPlanGrid.svelte";
   import OccuPlanRows from "./OccuPlanRows.svelte";
   import { createEventDispatcher } from 'svelte';
@@ -11,33 +9,10 @@
   import type { Occupation } from "$lib/types/occupations";
   import type { I18n } from '$lib/types/i18n';
   
-  
-
-  
-
-  
-
-
-  //https://accoma.de/ical/?user=81e66599-ac3c-4ad6-b261-fceeb784f9e9&acco=83cd06fd-858d-4e21-994f-325778812713
-  
-  interface Props {
-    /**
+  /**
    * Translations
   */
-    translations?: I18n;
-    defaultOccupationType?: any;
-    Styling
-    style?: any;
-    Header & Footer
-    headerContent?: string;
-    footerContent?: any;
-    //https://popnapdkcdnabruxkjti.supabase.co/storage/v1/object/public/ical/81e66599-ac3c-4ad6-b261-fceeb784f9e9/83cd06fd-858d-4e21-994f-325778812713
-    calUrl: string;
-    id?: any;
-  }
-
-  let {
-    translations = {
+  export let translations:I18n = {
     weekdayLabels: {
       1: 'Mo',
       2: 'Di',
@@ -66,13 +41,17 @@
     typeNames: {
       defaultOccupationTypeName: 'Belegt',
     }
-  },
-    defaultOccupationType = {
+  }
+
+  export let defaultOccupationType = {
     name: "defaultOccupationTypeName",//translations?.typeNames?.defaultOccupationTypeName ?? "Occupied",
     backgroundColor: 'rgb(33, 158, 188)',
     fontColor: 'rgb(2, 48, 71)',
-  },
-    style = {
+  }
+  /**
+   * Styling
+   */
+  export let style = {
     mainBorder: '1px solid rgb(2, 48, 71)',
     gridBorder: '0.2px solid rgba(2, 48, 71, 0.2)',
     fontColorMain: 'rgb(2, 48, 71)',
@@ -93,26 +72,33 @@
       border-radius: 0.5rem;
       filter: drop-shadow(0 0 0.2rem rgb(2, 48, 71));
     `
-  },
-    headerContent = 'Belegung',
-    footerContent = `
+  }
+
+  /**
+   * Header & Footer
+   */
+
+  export let headerContent = 'Belegung';
+  export let footerContent = `
     <a 
         style="color: 'rgb(2, 48, 71)'; filter: opacity(0.3);"
         href="https://github.com/accomade/occuplan"
         rel="noreferrer"
         target="_blank">
       Occuplan is OSS
-    </a>`,
-    calUrl,
-    id = crypto.randomUUID()
-  }: Props = $props();
+    </a>`;
 
-  let occupations:Occupation[] = $state([])
+  //https://accoma.de/ical/?user=81e66599-ac3c-4ad6-b261-fceeb784f9e9&acco=83cd06fd-858d-4e21-994f-325778812713
+  //https://popnapdkcdnabruxkjti.supabase.co/storage/v1/object/public/ical/81e66599-ac3c-4ad6-b261-fceeb784f9e9/83cd06fd-858d-4e21-994f-325778812713
+  export let calUrl:string;
+  export let id = crypto.randomUUID()
+
+  let occupations:Occupation[] = []
   const eventsIncomingCallback = ( o:Occupation ) => {
     occupations = [...occupations, o]
   }
   
-  run(() => {
+  $: {
     if(!calUrl) {
       dispatchFetchResult('result', {
         code: 400,
@@ -130,12 +116,12 @@
         return !eventsResult.error
       }, {initialDelay: 200, debounceDelay: 5000})
     }
-  });
+  }
 
   /*
     use different component based on different media size.
   */
-	let w:Number = $state();
+	let w:Number;
 	
 </script>
 
